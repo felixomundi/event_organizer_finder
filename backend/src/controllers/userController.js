@@ -1,7 +1,6 @@
 // const db = require('../models');
 const jwt = require('jsonwebtoken');
-// const User = db.users;
-const {User} = require('./../../database/models')
+const {User} = require('./../database/models');
 const Token = {};
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');

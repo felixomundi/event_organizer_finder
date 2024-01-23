@@ -1,5 +1,5 @@
 "use strict";
-const { User, Cart, OrderItems, Order, Product } = require('./../../database/models')
+const { User, Cart, OrderItems, Order, Product } = require('./../database/models');
 const crypto = require("crypto")
 const createOrder = async (req, res) => {
     try {

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "private":true,
+  "private": true,
   "scripts": {
     "start": "nodemon index.js",
     "server": "nodemon index.js",
@@ -14,6 +14,7 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^7.6.0",
+    "ngrok": "^5.0.0-beta.2",
     "nodemon": "^2.0.20"
   },
   "dependencies": {
@@ -31,7 +32,6 @@
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^2.3.3",
-    "ngrok": "^4.3.3",
     "nodemailer": "^6.8.0",
     "sequelize": "^6.25.8",
     "sequelize-cli": "^6.6.1"

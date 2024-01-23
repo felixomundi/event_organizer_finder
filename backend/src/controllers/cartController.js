@@ -1,5 +1,5 @@
-const {Cart,Product,User,Coupon,Coupontype} = require('./../../database/models')
-const { Sequelize } = require('sequelize')
+const { Cart, Product, User, Coupon, Coupontype } = require('./../database/models');
+const { Sequelize } = require('sequelize');
 // fetch user cart
 const getCart = async (req, res) => {
     try {

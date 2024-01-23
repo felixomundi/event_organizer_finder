@@ -1,4 +1,4 @@
-const {Subscribers} = require("../../database/models")
+const {Subscribers} = require('./../database/models');
 class SubscriberService {
     static  async findByEmail(email) {
      return   await Subscribers.findOne({

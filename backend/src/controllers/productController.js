@@ -1,6 +1,6 @@
 // const db = require('../models')
 const asyncHandler = require("express-async-handler")
-const {Product} = require('./../../database/models')
+const {Product} = require('./../database/models');
 const addProduct = async (req, res) => {
     try {      
         const price = req.body.price;
