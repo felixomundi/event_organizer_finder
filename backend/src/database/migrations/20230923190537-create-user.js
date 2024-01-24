@@ -45,6 +45,14 @@ module.exports = {
                 min:6,
             },
       },
+      status: {
+        type: Sequelize.STRING,
+        allowNull: false,
+            defaultValue:"active",
+            validate:{
+                notEmpty: true,
+            },
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

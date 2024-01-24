@@ -9,7 +9,7 @@ const sendEmail = require("../utils/sendEmail");
 const dotenv = require('dotenv');
 dotenv.config();
 
-// Generate JWT
+// Generate JWT Token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: '2d',
@@ -22,10 +22,6 @@ const validateEmail = (email) => {
   );
 };
 
-// @desc    Register new user
-// @route   POST /api/users
-// @access  Public
-// Register User
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -75,7 +71,6 @@ const registerUser = async (req, res) => {
   }
 };
 
-// Login User
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -99,16 +94,6 @@ const loginUser = async (req, res) => {
 
   //   Generate Token
   const token = generateToken(user.id);
-
-  // Send HTTP-only cookie
-  // res.cookie("token", token, {
-  //   path: "/",
-  //   httpOnly: true,
-  //   expires: new Date(Date.now() + 1000 * 86400), // 1 day
-  //   sameSite: "lax",
-  //   secure: true,
-  // });
-
   if (user && passwordIsCorrect) {
     const { id, name, email, phone,role } = user;
   return  res.status(200).json({
@@ -125,8 +110,6 @@ const loginUser = async (req, res) => {
   }
 };
 
-
-// Update User
 const updateUser = async (req, res) => {
 
   try {
@@ -277,7 +260,6 @@ const forgotPassword = asyncHandler(async (req, res) => {
   }
 }
 );
-
 const resetPassword = asyncHandler(async (req, res) => {
   const { password } = req.body;
   const { resetToken } = req.params;
@@ -307,7 +289,6 @@ const resetPassword = asyncHandler(async (req, res) => {
     message: "Password Reset Successful, Please Login",
   });
 })
-
 const getUsers = async (req, res) => {
   const users = await User.findAll()
   if(users){
@@ -316,9 +297,9 @@ const getUsers = async (req, res) => {
     return res.status(404).json("No users found in the database")
   }
 }
-
 const addUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  try {
+    const { name, email, password } = req.body;
 
   // Validation
   if (!name || !email || !password) {
@@ -326,7 +307,7 @@ const addUser = async (req, res) => {
   }
 
   if (!validateEmail(email)) {
-    return res.status(400).json('Please Enter a valid email address.')
+    return res.status(400).json('Please Enter a valid email address.');
     }
   if (password.length < 6) {
     return  res.status(400).json("Password must be up to 6 characters");
@@ -345,9 +326,8 @@ const addUser = async (req, res) => {
     email,
     password,
   });
-
   if (user) {
-    const { id, name, email,  phone,role } = user;
+    const { id, name, email,  phone, role } = user;
     return  res.status(201).json({
       id,
       name,
@@ -356,11 +336,66 @@ const addUser = async (req, res) => {
       role,
     
     });
-  } else {
-    return res.status(400).json("Invalid user data");
+  } 
+  } catch (error) {    
+      return res.status(500).json("Error Creating User");
+   
   }
 }
-
+const createOrganizer = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    
+    // Validation
+    if (!name || !email || !password) {
+      return res.status(400).json("Please add all fields");
+    }
+  
+    if (!validateEmail(email)) {
+      return res.status(400).json('Please Enter a valid email address.');
+      }
+    if (password.length < 6) {
+      return  res.status(400).json("Password must be up to 6 characters");
+    }
+  
+    // Check if user email already exists
+    const userExists = await User.findOne({ where:{email:email} });
+  
+    if (userExists) {
+      return  res.status(400).json("Email already taken");
+    }
+  
+    // Create new user
+    const user = await User.create({
+      name,
+      email,
+      password,
+      role: "organizer"
+    });
+    if (user) {
+      const { id, name, email,  phone, role } = user;
+      return  res.status(201).json({
+        id,
+        name,
+        email,     
+        phone,     
+        role,
+        
+      });
+    } 
+  } catch (error) {
+    return res.status(500).json("Error Creating User");
+  }
+}
+const getOrganizers = async (req, res) => {
+  try {    
+    const users = await User.findAll({ where: { role: "organizer" },attributes:["id", "name", "email","role", "phone"] });    
+      return res.status(200).json(users);  
+    
+  } catch (error) {
+    return res.status(500).json("Error Fetching Users");
+  }
+}
 module.exports = {
   registerUser,
   loginUser,
@@ -369,6 +404,8 @@ module.exports = {
   changePassword,
   forgotPassword,
   resetPassword,
-  addUser
+  addUser,
+  createOrganizer,
+  getOrganizers,
 
-};
+}

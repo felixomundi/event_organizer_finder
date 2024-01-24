@@ -32,15 +32,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use('/', express.static(path.join(__dirname, 'public')))
 
-app.use('/api/v1/products', require('./src/routes/productRoute.js'));
+// app.use('/api/v1/products', require('./src/routes/productRoute.js'));
 app.use('/api/v1/users', require('./src/routes/userRoute.js'));
-app.use("/api/v1/cart", require("./src/routes/cartRoute.js"));
-app.use("/api/v1/coupon", require("./src/routes/couponTypeRoute.js"));
-app.use("/api/v1/codes", require("./src/routes/couponCodeRoute.js"));
-app.use("/api/v1/orders", require("./src/routes/orderRoute.js"));
-app.use("/api/v1/subscribers", require("./src/routes/subscribeRoute.js"));
-app.use("/api/v1/contact", require("./src/routes/contactRoute.js"));
-app.use("/api/v1/mpesa", require("./src/routes/mpesaRoute.js"));
+app.use('/api/v1/events', require('./src/routes/eventRoute.js'));
+// app.use("/api/v1/cart", require("./src/routes/cartRoute.js"));
+// app.use("/api/v1/coupon", require("./src/routes/couponTypeRoute.js"));
+// app.use("/api/v1/codes", require("./src/routes/couponCodeRoute.js"));
+// app.use("/api/v1/orders", require("./src/routes/orderRoute.js"));
+// app.use("/api/v1/subscribers", require("./src/routes/subscribeRoute.js"));
+// app.use("/api/v1/contact", require("./src/routes/contactRoute.js"));
+// app.use("/api/v1/mpesa", require("./src/routes/mpesaRoute.js"));
 app.use("/",(req,res)=>{
     res.status(200)
     if (req.accepts('html')) {
