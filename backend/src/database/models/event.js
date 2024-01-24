@@ -16,8 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   Event.init({
     event_name: DataTypes.STRING,
     location: DataTypes.STRING,
-    time_start: DataTypes.DATE,
-    time_end: DataTypes.DATE,
+    time_start: DataTypes.STRING,
+    time_end: DataTypes.STRING,
     event_date: DataTypes.DATE,
     details: DataTypes.STRING,
     no_of_participants: DataTypes.INTEGER,

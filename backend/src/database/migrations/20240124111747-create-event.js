@@ -24,11 +24,11 @@ module.exports = {
                     },
       },
       time_start: {
-        type: Sequelize.DATE,
+        type: Sequelize.STRING,
         allowNull:false,
       },
       time_end: {
-        type: Sequelize.DATE,
+        type: Sequelize.STRING,
         allowNull:false,
       },
       event_date: {
