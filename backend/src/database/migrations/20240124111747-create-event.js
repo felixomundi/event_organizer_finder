@@ -58,7 +58,7 @@ module.exports = {
                 },
       },
       entry_fee: {
-        type: Sequelize.FLOAT(10, 2),
+        type: Sequelize.DECIMAL(10, 2),
         defaultValue: 0,
         allowNull:false,
       },
