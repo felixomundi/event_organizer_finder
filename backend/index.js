@@ -35,6 +35,7 @@ app.use('/', express.static(path.join(__dirname, 'public')))
 // app.use('/api/v1/products', require('./src/routes/productRoute.js'));
 app.use('/api/v1/users', require('./src/routes/userRoute.js'));
 app.use('/api/v1/events', require('./src/routes/eventRoute.js'));
+app.use("/api/v1/tickets", require("./src/routes/ticketRoute.js"));
 // app.use("/api/v1/cart", require("./src/routes/cartRoute.js"));
 // app.use("/api/v1/coupon", require("./src/routes/couponTypeRoute.js"));
 // app.use("/api/v1/codes", require("./src/routes/couponCodeRoute.js"));
