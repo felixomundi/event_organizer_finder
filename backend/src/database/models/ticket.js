@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Ticket.init({
     userId: DataTypes.INTEGER,
     eventId: DataTypes.INTEGER,
-    no_participants: DataTypes.INTEGER,
+    no_of_participants: DataTypes.INTEGER,
     total: DataTypes.DECIMAL,
     status: DataTypes.STRING,
     creatorId:DataTypes.INTEGER

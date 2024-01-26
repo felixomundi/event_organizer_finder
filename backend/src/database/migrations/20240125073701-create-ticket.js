@@ -35,7 +35,7 @@ module.exports = {
             as:"eventId",
                   },
       },
-      no_participants: {
+      no_of_participants: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue:1,

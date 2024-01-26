@@ -17,7 +17,9 @@ const isOrganizer = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
       
       if (!token) {
-        return res.status(401).json("Not authorized, please login");
+        return res.status(401).json({
+          message:"Not authorized, please login"
+        });
       }
 
       // Verify Token
@@ -27,15 +29,21 @@ const isOrganizer = async (req, res, next) => {
         where: { id: verified.id }
       });
       if (!user) {
-        return res.status(404).json("User not found");
+        return res.status(404).json({
+          message:"User not found"
+        });
         }
         if (user.role !== "organizer") {
-          return res.status(403).json("Access Denied"); 
+          return res.status(403).json({
+            message:"Access Denied You are not an organizer"
+          }); 
         }
       req.user = user;
       next();
     } catch (error) {
-      return res.status(401).json("Unauthenticated, please login");
+      return res.status(401).json({
+        message:"Unauthenticated, please login"
+      });
     }
   }
 }

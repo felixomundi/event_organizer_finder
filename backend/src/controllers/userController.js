@@ -42,8 +42,7 @@ const registerUser = async (req, res) => {
 
   if (userExists) {
     return  res.status(400).json("Email already taken");
-    // throw new Error("Email has already been registered");
-  }
+    }
 
   // Create new user
   const user = await User.create({

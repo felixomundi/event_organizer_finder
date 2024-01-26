@@ -2,7 +2,7 @@ const {User }= require('./../database/models');
 const jwt = require("jsonwebtoken");
 
 
-const protect = async (req, res, next) => {
+const isAuthenticated = async (req, res, next) => {
 
   let token
 
@@ -16,7 +16,9 @@ const protect = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
       
       if (!token) {
-        return res.status(401).json("Not authorized, please login");
+        return res.status(401).json({
+          message:"Not authorized, please login"
+        });
       }
 
       // Verify Token
@@ -26,16 +28,25 @@ const protect = async (req, res, next) => {
         where: { id: verified.id }
       });
       if (!user) {
-        return res.status(404).json("User not found");
+        return res.status(404).json({
+          message:"User not found"
+        });
       }
+      // if (user.role !== "user") {
+      //   return res.status(403).json({
+      //     message:"Access Denied You are not event finder"
+      //   }); 
+      // }
       req.user = user;
       next();
     } catch (error) {
-      return res.status(401).json("Unauthenticated, please login");
+      return res.status(401).json({
+        message:"Unauthenticated, please login"
+      });
     }
   }
 }
 
 
-module.exports = protect;
+module.exports = isAuthenticated;
    
