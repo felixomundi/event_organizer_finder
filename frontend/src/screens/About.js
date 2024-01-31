@@ -1,9 +1,18 @@
 import React from 'react'
+import { Pressable, Text, View } from 'react-native'
 
-function About() {
+export default function About({navigation}) {
   return (
-    <div>About</div>
+    <View style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems:'center'
+    }}>
+
+    {/* <Pressable onPress={() => navigation.navigate("Login")} > */}
+        <Text>About</Text>
+      {/* </Pressable> */}
+    </View>
+    
   )
 }
-
-export default About
