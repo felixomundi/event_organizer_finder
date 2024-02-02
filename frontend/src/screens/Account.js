@@ -1,7 +1,7 @@
 import React from 'react'
 import { Pressable, Text, View } from 'react-native'
 
-export default function About({navigation}) {
+export default function Account({navigation}) {
   return (
     <View style={{
       flex: 1,
@@ -10,7 +10,7 @@ export default function About({navigation}) {
     }}>
 
     {/* <Pressable onPress={() => navigation.navigate("Login")} > */}
-        <Text>About</Text>
+        <Text>Account</Text>
       {/* </Pressable> */}
     </View>
     

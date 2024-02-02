@@ -1,11 +1,11 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './../screens/Home'
-import About from './../screens/About';
+import Account from '../screens/Account';
 import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Login from "./../screens/Auth/Login"
+import EventDetail from "./../screens/EventDetail"
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 function TabNavigator() {
   const Tab = createBottomTabNavigator();  
@@ -14,16 +14,16 @@ function TabNavigator() {
   const HomeStack = () => {
     return (
       <Stack.Navigator>
-      <Stack.Screen name="Home2" component={Home} />
-      <Stack.Screen name="Login" component={Login} screenOptions={{
+      <Stack.Screen name="Home"  component={Home} />
+      <Stack.Screen name="EventDetail" component={EventDetail} screenOptions={{
         headerShown:true,
       }} /> 
     </Stack.Navigator>);
   }
 
   const getTabVisibility = (route) => {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home1';   
-    if (routeName == 'Login') {
+    const routeName = getFocusedRouteNameFromRoute(route) ?? 'HomePage';   
+    if (routeName == 'EventDetail') {
       return 'none'
     } 
     return 'flex'    
@@ -39,8 +39,9 @@ function TabNavigator() {
           tabBarInactiveTintColor: "#ffff",
           tabBarActiveTintColor:"yellow"
       }}>    
-        <Tab.Screen name="Home1" component={HomeStack}
-           options={({ navigation, route }) => ({           
+        <Tab.Screen name="HomePage" component={HomeStack}
+        options={({ navigation, route }) => ({    
+           
             tabBarIcon:({color, size})=>{
                <Ionicons name='home-outline' color="red" size={size} />                  
              },
@@ -50,9 +51,9 @@ function TabNavigator() {
              }
               })}
           />
-          <Tab.Screen name="About" component={About}      
+          <Tab.Screen name="Account" component={Account}      
             options={({ navigation }) => ({
-            headerTitle: "About",        
+            headerTitle: "Account",        
             tabBarIcon:({color,size})=>{
             <Feather name='shopping-bag' color="black" size={size} />                
             }

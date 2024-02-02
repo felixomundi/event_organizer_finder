@@ -3,7 +3,8 @@ import { SafeAreaView, Text, View, StyleSheet, TextInput, TouchableOpacity } fro
 import {useNavigation} from "@react-navigation/native"
 import { validateEmail } from '../Utils';
 import {useDispatch, useSelector} from "react-redux"
-import { login } from '../redux/slices/auth';
+import { login, logout } from '../redux/slices/auth';
+import Loader from '../Components/Loader';
 function LoginScreen() {
   const navigation = useNavigation();
   const styles = StyleSheet.create({
@@ -61,7 +62,9 @@ function LoginScreen() {
       fontSize: 20,
       fontWeight: '600',
       color: 'black',
-      textAlign: 'center',
+      textAlign: 'center',      
+    },
+    activity_indicator: {
       
     },
     
@@ -69,26 +72,44 @@ function LoginScreen() {
   const [email, setEmail] = useState('')
   const [password,setPassword] = useState('')
   const dispatch = useDispatch();
-  const user = useSelector(state => state.auth.user);
-  console.log(user);
+
+  const { isLoading, user } = useSelector(state => state.auth);
+  
   useEffect(() => {
+  //   if (isError) {
+  //     toast.error(message)
+  // }
+  // if (isSuccess || user) {
+  //     navigate(route);
+  // }
+
+  // dispatch(reset())
     
-  },)
-  async function onPress(){
-    if (!email) {
-     return  alert("Please add an email address")
-    }
-    if (!validateEmail(email)) {
-    return  alert("Invalid email address")
-    }
-    if (!password) {
-      return  alert("Please Add Password")      
-    }
-    let data = {
-      email,
-      password
-    }
-    dispatch(login(data))
+  }, [
+
+    // user, isError, isSuccess, message, navigate,route,dispatch
+  ])
+  
+  if (isLoading) {   
+    return  <Loader />
+  }
+  async function onPress() {
+    //  console.log(user);
+    dispatch(logout())
+    // if (!email) {
+    //  return  alert("Please add an email address")
+    // }
+    // if (!validateEmail(email)) {
+    // return  alert("Invalid email address")
+    // }
+    // if (!password) {
+    //   return  alert("Please Add Password")      
+    // }
+    // let data = {
+    //   email,
+    //   password
+    // }
+    // dispatch(login(data))
   
   }
   return (
@@ -110,8 +131,7 @@ function LoginScreen() {
               keyboardType='email-address'
               value={email}
               onChangeText={text=>setEmail(text) }
-            ></TextInput>
-           
+            ></TextInput>           
           </View>
 
           <View style={styles.input}>

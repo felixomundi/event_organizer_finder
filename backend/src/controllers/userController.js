@@ -96,12 +96,15 @@ const loginUser = async (req, res) => {
   if (user && passwordIsCorrect) {
     const { id, name, email, phone,role } = user;
   return  res.status(200).json({
-      id,
-      name,
-      email,    
-      phone,      
-      token,
-      role,
+      // id,
+      // name,
+      // email,    
+      // phone,      
+      // token,
+      // role,
+    user_data: { 
+        id,name,email,phone,role,token
+      } 
     
     });
   } else {
