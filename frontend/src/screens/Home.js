@@ -1,75 +1,80 @@
-import React from 'react'
-import { FlatList, Image, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native'
-import {useNavigation} from '@react-navigation/native';
 
-const  Home = ()=> {
-  const navigation = useNavigation();
-  const data = [
-    { id: '1', title: 'Item 1' },
-    { id: '2', title: 'Item 2' },
-    { id: '3', title: 'Item 3' },
-   
-  ];
-  const renderItem = ({ item }) => (
-    <View style={{
-      padding: 20,
-      marginVertical: 8,
-    marginHorizontal:16}}>
-      <Text>{item.title}</Text>
-    </View>
-  );
-  const styles = StyleSheet.create({
-    safe_area_view: {
-      flex: 1,
-      paddingHorizontal: 20,
-      backgroundColor:'#ffff'
-    },
-    header:{
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginTop:20,
-    },
-    app: {
-      fontSize: 30,
-      fontWeight: 'bold',
-      color:'green'
-    },
-    welcome:{
-      fontSize: 20,
-      fontWeight: 'bold'
-    },
-    image: {
-      width: '20px',
-      height:'20px'
-    },
-  })
-    // <View>
-    // <Pressable onPress={() => navigation.navigate("Login")} >
-    //   <Text>Please Login</Text>
-    // </Pressable>
-    // </View>
+import React from 'react';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
+import ProductCard from './../Components/ProductCard';
+import CategoryCard from '././../Components/CategoryCard';
+
+const products = [
+  { id: 1, name: 'Product 1', price: '$20',image:require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
+  { id: 2, name: 'Product 2', price: '$30', image: require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
+  { id: 3, name: 'Product 3', price: '$30', image:require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
+  // Add more products as needed
+];
+
+const categories = [
+  { id: 1, name: 'Category 1',image:require('../../assets/images/splash.jpg') },
+  { id: 2, name: 'Category 2',image:require('../../assets/images/splash.jpg') },
+  // Add more categories as needed
+];
+
+const Home = () => {
   return (
-    <SafeAreaView style={styles.safe_area_view}>
-    <View style={styles.header}>
+    <View style={styles.container}>
+        <View style={styles.header}>
       <View>
         <Text style={styles.welcome}>Welcome to </Text>
         <Text style={styles.app}>Vaibu App</Text>
         </View>       
       </View>
-      <View style={{
-        flexDirection: 'row',
-        marginTop: 20,
-      }}>
-        <FlatList          
-      data={data}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id}
-    />
+      <Text style={styles.title}>Featured Events</Text>     
+      <FlatList 
+        data={products}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) =>
+        
+             <ProductCard product={item}   />}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      />
+     
 
-      </View>
+      <Text style={styles.title}>Categories</Text>
+      <FlatList
+        data={categories}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => <CategoryCard category={item} />}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      />
+    </View>
+  );
+};
 
-    </SafeAreaView>
-  )
-}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 10,
+  },
+  header:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop:20,
+  },
+  app: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: 'green',
+    letterSpacing:1,
+  },
+  welcome:{
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+});
 
-export default Home
+export default Home;
