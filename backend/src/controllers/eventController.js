@@ -19,11 +19,48 @@ async function createEventByOrganizer(req, res) {
             { event_name, location,
             time_start, time_end, event_date,
             details, no_of_participants, entry_fee
-            } = req.body;       
-        if (!event_name || !location || !time_start || !time_end || !event_date || !no_of_participants || !entry_fee) {
+            } = req.body;    
+        const image = req.file;
+        if (!event_name) {
             return res.status(400).json({
-                message:"Please add all event fields"
+                message:"Please add event_name field"
             });   
+        }
+        if(!location){
+            return res.status(400).json({
+                message:"Please add location field"
+            });  
+        }
+        if(!time_start){
+            return res.status(400).json({
+                message:"Please add time_start"
+            });  
+        }
+        if(!time_end){
+            return res.status(400).json({
+                message:"Please add time_end field"
+            });  
+        }
+        if(!event_date){
+            return res.status(400).json({
+                message:"Please add event_date field"
+            });  
+        }
+        if(!no_of_participants){
+            return res.status(400).json({
+                message:"Please add no_of_participants field"
+            });  
+        }
+        if(!entry_fee){
+            return res.status(400).json({
+                message:"Please add event_fee field"
+            });  
+        }
+        
+        if (!image) {
+            return res.status(400).json({
+                message:'Please add event image'
+            })
         }
         let date = await generateDate(event_date);
         const event_exists = await Event.findOne({
@@ -35,7 +72,8 @@ async function createEventByOrganizer(req, res) {
             });    
         }
         const event = await Event.create({
-                event_name,location,time_start,time_end,event_date:date,details,no_of_participants,entry_fee,userId:req.user.id
+            event_name, location, time_start, time_end, event_date: date, details, no_of_participants, entry_fee, userId: req.user.id,
+            image: req.file.path,
             })            
         return res.status(200).json(event);  
         

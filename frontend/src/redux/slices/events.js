@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
-const API_URL = 'http://192.168.171.172:5000/api/v1/events/' 
+const API_URL = 'http://192.168.171.108:5000/api/v1/events/' 
 
 const config = {
   headers: {
@@ -25,18 +25,13 @@ const initialState = {
 // Login user
 export const getEvents = createAsyncThunk('events/getEvents', async (_, thunkAPI) => {
   try {
-      const response = await axios.get(API_URL, config);    
-      console.log(response.data);
-    // if (response.status == 200) {
-    //   const data =  JSON.stringify(response.data.user_data);
-    //   await AsyncStorage.removeItem('user')
-    //   await AsyncStorage.setItem('user', data)
-    // }  
+    const response = await axios.get(API_URL, config);    
     return response.data;
-  } catch (error) {        
-    // const message = error.response.data;
-    // return thunkAPI.rejectWithValue(message)
-    console.log(error);
+  } catch (error) {   
+    if (error) {   
+      const message = error.response.data.message;
+      return thunkAPI.rejectWithValue(message)
+    }  
   }
 })  
 
@@ -65,6 +60,7 @@ export const authSlice = createSlice({
       .addCase(getEvents.rejected, (state, action) => {
         state.isLoading = false     
         state.events = []
+        state.isError = true
       })
       
        

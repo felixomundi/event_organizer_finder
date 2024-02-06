@@ -70,6 +70,13 @@ module.exports = {
                 notEmpty: true,
             },
       },
+      image: {
+        type: Sequelize.STRING,
+        allowNull: false,           
+            validate:{
+                notEmpty: true,
+            },
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

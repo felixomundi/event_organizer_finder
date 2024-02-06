@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     no_of_participants: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     entry_fee: DataTypes.DECIMAL,
-    status: DataTypes.STRING
+    status: DataTypes.STRING,
+    image:DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Event',
