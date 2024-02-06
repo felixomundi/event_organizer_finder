@@ -6,12 +6,13 @@ import CategoryCard from '../components/CategoryCard';
 import { useDispatch, useSelector } from "react-redux"
 import { getEvents } from '../redux/slices/events';
 import Loader from "../components/Loader"
-const products = [
-  { id: 1, name: 'Product 1', price: '20',image:require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
-  { id: 2, name: 'Product 2', price: '30', image: require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
-  { id: 3, name: 'Product 3', price: '30', image:require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
 
-];
+// const products = [
+//   { id: 1, name: 'Product 1', price: '20',image:require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
+//   { id: 2, name: 'Product 2', price: '30', image: require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
+//   { id: 3, name: 'Product 3', price: '30', image:require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
+
+// ];
 
 const categories = [
   { id: 1, name: 'Category 1', image:require('../../assets/images/splash.jpg') },
@@ -42,10 +43,10 @@ const Home = () => {
             <>
               {events?.length > 0 ? (<>
               <FlatList 
-        data={products}
+        data={events}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) =>        
-             <ProductCard product={item}   />}
+             <ProductCard event={item}   />}
         horizontal
         showsHorizontalScrollIndicator={false}
       />    
@@ -59,7 +60,7 @@ const Home = () => {
       <Text style={styles.title}>Categories</Text>
       <FlatList
         data={categories}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => <CategoryCard category={item} />}
         horizontal
         showsHorizontalScrollIndicator={false}

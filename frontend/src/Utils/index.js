@@ -4,4 +4,13 @@ function validateEmail(email) {
     );
      
 }
-export  { validateEmail }
+
+function image_url(event) {
+    try {
+        const url =  `http://192.168.171.108:5000/`+ event?.image
+        return url 
+      } catch (error) {
+        
+      }
+}
+export  { validateEmail,image_url }

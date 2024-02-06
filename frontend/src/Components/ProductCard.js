@@ -1,19 +1,19 @@
-// src/components/ProductCard.js
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-const ProductCard = ({ product }) => {
+import { useNavigation } from '@react-navigation/native';
+import {image_url} from "../utils/"
+const ProductCard = ({ event }) => {
   const navigation = useNavigation();
-
   const handlePress = () => {
-    navigation.navigate('EventDetail', { product });
+    navigation.navigate('EventDetail', { event });
   };
+
   return (
     <TouchableOpacity style={styles.card} onPress={handlePress}>
     <View >
-      <Image source={product.image} style={styles.productImage} />
-      <Text style={styles.productName}>{product.name}</Text>
-      <Text style={styles.productPrice}>{product.price}</Text>
+      <Image source={{uri:image_url(event)}} style={styles.productImage} />
+      <Text style={styles.productName}>{event.event_name}</Text>
+      <Text style={styles.productPrice}>{event.entry_fee}</Text>
     </View>
     </TouchableOpacity>
   );

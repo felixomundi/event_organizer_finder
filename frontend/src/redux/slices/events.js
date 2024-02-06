@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
-const API_URL = 'http://192.168.171.108:5000/api/v1/events/' 
+// import { NETWORK_URL } from '@env';
+
+const API_URL = `http://192.168.171.108:5000/api/v1/events/`
 
 const config = {
   headers: {
@@ -28,6 +30,7 @@ export const getEvents = createAsyncThunk('events/getEvents', async (_, thunkAPI
     const response = await axios.get(API_URL, config);    
     return response.data;
   } catch (error) {   
+    console.log("error:------------------------",error);
     if (error) {   
       const message = error.response.data.message;
       return thunkAPI.rejectWithValue(message)

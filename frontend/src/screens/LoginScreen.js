@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView, Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 import {useNavigation} from "@react-navigation/native"
-import { validateEmail } from '../Utils';
+import { validateEmail } from '../utils';
 import {useDispatch, useSelector} from "react-redux"
 import { login, logout } from '../redux/slices/auth';
 import Loader from '../components/Loader';

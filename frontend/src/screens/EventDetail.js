@@ -1,18 +1,18 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Alert, Button } from 'react-native';
-
+import { image_url } from '../utils';
 const EventDetail = ({ route }) => {
-  const { product } = route.params;
+  const { event } = route.params;
   const handleAddToCart = () => {   
     Alert.alert('Product added to cart!');
   };
   return (
     <View style={styles.container}>
-      <Image source={product.image } style={styles.productImage} />
-      <Text style={styles.productName}>{product.name}</Text>
-      <Text style={styles.productPrice}>{product.price}</Text>
-      <Text style={styles.productDescription}>{product.description}</Text>
-      <Button title="Add to Cart" style={styles.add_to_cart_button} onPress={handleAddToCart} />
+      <Image source={{uri:image_url(event)} } style={styles.productImage} />
+      <Text style={styles.productName}>{event.event_name}</Text>
+      <Text style={styles.productPrice}>{event.entry_fee}</Text>
+      <Text style={styles.productDescription}>{event.details}</Text>
+      <Button title="Book Event" style={styles.add_to_cart_button} onPress={handleAddToCart} />
     </View>
   );
 };
