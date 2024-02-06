@@ -1,12 +1,13 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from './../screens/Home'
+import Home from '../screens/Home'
 import Account from '../screens/Account';
 import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import EventDetail from "./../screens/EventDetail"
+import EventDetail from "../screens/EventDetail"
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import CartScreen from '../screens/CartScreen';
 function TabNavigator() {
   const Tab = createBottomTabNavigator();  
   const Stack = createNativeStackNavigator();
@@ -14,7 +15,7 @@ function TabNavigator() {
   const HomeStack = () => {
     return (
       <Stack.Navigator>
-      <Stack.Screen name="Home"  component={Home} />
+        <Stack.Screen name="Home" component={Home} />       
       <Stack.Screen name="EventDetail" component={EventDetail} screenOptions={{
         headerShown:true,
       }} /> 
@@ -50,7 +51,17 @@ function TabNavigator() {
                backgroundColor:"black"
              }
               })}
-          />
+      />
+
+        <Tab.Screen name="CartScreen" component={CartScreen}      
+        options={({ navigation }) => ({
+        headerTitle: "Cart Page",        
+        tabBarIcon:({color,size})=>{
+        <Feather name='shopping-bag' color="black" size={size} />                
+        }
+        })}
+        />
+      
           <Tab.Screen name="Account" component={Account}      
             options={({ navigation }) => ({
             headerTitle: "Account",        

@@ -1,13 +1,13 @@
 
 import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
-import ProductCard from './../Components/ProductCard';
-import CategoryCard from '././../Components/CategoryCard';
+import ProductCard from './../components/ProductCard';
+import CategoryCard from '../components/CategoryCard';
 
 const products = [
-  { id: 1, name: 'Product 1', price: '$20',image:require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
-  { id: 2, name: 'Product 2', price: '$30', image: require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
-  { id: 3, name: 'Product 3', price: '$30', image:require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
+  { id: 1, name: 'Product 1', price: '20',image:require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
+  { id: 2, name: 'Product 2', price: '30', image: require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
+  { id: 3, name: 'Product 3', price: '30', image:require('../../assets/images/splash.jpg'),description:"nnnnnnnnnnnnnnnnnnnnnnnnnnn" },
   // Add more products as needed
 ];
 

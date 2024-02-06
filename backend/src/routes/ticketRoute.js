@@ -1,5 +1,5 @@
 const express = require("express");
-const { bookTicket, getTickets } = require("../controllers/organizer/ticketController");
+const { bookTicket, getTickets } = require("../controllers/ticketController");
 const router = express.Router();
 const isOrganizer = require("../middleware/organizerMiddleware");
 const isAuthenticated = require("../middleware/authMiddleware");

@@ -1,4 +1,4 @@
-const { Ticket,Event } = require("../../database/models");
+const { Ticket,Event } = require("../database/models");
 
 async function getTickets(req, res) {
     try {

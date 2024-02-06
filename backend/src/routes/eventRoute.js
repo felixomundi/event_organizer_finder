@@ -1,7 +1,8 @@
 const express = require("express");
-const { getOrganizerEvents, createEventByOrganizer, deleteEventByOrganizer, updateEventStatusByOrganizer, updateEventByOrganizer } = require("../controllers/organizer/eventController");
+const { getOrganizerEvents, createEventByOrganizer, deleteEventByOrganizer, updateEventStatusByOrganizer, updateEventByOrganizer, getEvents } = require("../controllers/eventController");
 const  isOrganizer  = require("./../middleware/organizerMiddleware");
 const router = express.Router();
+router.get("/", getEvents);
 router.get("/", isOrganizer, getOrganizerEvents);
 router.post("/", isOrganizer, createEventByOrganizer);
 router.post("/update", isOrganizer, updateEventStatusByOrganizer);

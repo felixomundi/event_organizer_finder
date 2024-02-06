@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import TabNavigator from "./src/Navigation/TabNavigator";
-import AuthStack from './src/Navigation/AuthStack';
+import TabNavigator from "./src/navigation/TabNavigator";
+import AuthStack from './src/navigation/AuthStack';
 import { Provider } from 'react-redux'
 import { store } from './src/redux/store'
 

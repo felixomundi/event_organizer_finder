@@ -1,5 +1,5 @@
-const { Event } = require("../../database/models");
-const generateDate = require("../../utils/generateDate");
+const { Event } = require("../database/models");
+const generateDate = require("../utils/generateDate");
 
 async function getOrganizerEvents(req, res) {
     try {
@@ -8,7 +8,9 @@ async function getOrganizerEvents(req, res) {
         });
         return res.status(200).json(events);
     } catch (error) {
-        return res.status(500).json("Error in fetching events");       
+        return res.status(500).json({
+            message:"Error in fetching events"
+        });       
     }
 }
 async function createEventByOrganizer(req, res) {
@@ -144,11 +146,22 @@ async function updateEventByOrganizer(req, res){
         }); 
     }
 }
+async function getEvents(req, res) {
+    try {
+        const events = await Event.findAll();
+        return res.status(200).json(events);
+    } catch (error) {
+        return res.status(500).json({
+            message:"Error in fetching events"
+        });       
+    }
+}
 
 module.exports = {
     getOrganizerEvents,
     createEventByOrganizer,
     deleteEventByOrganizer,
     updateEventStatusByOrganizer,
-    updateEventByOrganizer
+    updateEventByOrganizer,
+    getEvents
 }

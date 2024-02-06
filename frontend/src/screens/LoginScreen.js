@@ -4,7 +4,7 @@ import {useNavigation} from "@react-navigation/native"
 import { validateEmail } from '../Utils';
 import {useDispatch, useSelector} from "react-redux"
 import { login, logout } from '../redux/slices/auth';
-import Loader from '../Components/Loader';
+import Loader from '../components/Loader';
 function LoginScreen() {
   const navigation = useNavigation();
   const styles = StyleSheet.create({

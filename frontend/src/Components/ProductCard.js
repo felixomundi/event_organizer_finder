@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 14,
     color: '#888',
+    fontWeight:'bold'
   },
 });
 

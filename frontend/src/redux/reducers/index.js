@@ -1,10 +1,11 @@
 
 import authReducer from './../slices/auth'
-
+import eventReducer from "../slices/events"
 import { combineReducers } from 'redux'
 
 const rootReducer = combineReducers({
-    auth: authReducer, 
+    // auth: authReducer, 
+    events:eventReducer,
      
 })
 
