@@ -29,7 +29,7 @@ let user_value = async () => {
 }
 const USER = user_value();
 const initialState = { 
-  user: USER ? USER : null ,
+  user: USER ? USER : {} ,
   users: [],
   isError: false,
   isSuccess: false,

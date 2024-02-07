@@ -42,7 +42,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   add_to_cart_button: {
-    marginTop:30
+    marginTop: 30,
+    borderRadius:8
   }
 });
 
