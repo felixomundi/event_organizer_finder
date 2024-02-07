@@ -3,7 +3,7 @@ import { SafeAreaView, Text, View, StyleSheet, TextInput, TouchableOpacity } fro
 import {useNavigation} from "@react-navigation/native"
 import { validateEmail } from '../utils';
 import {useDispatch, useSelector} from "react-redux"
-import { login, logout } from '../redux/slices/auth';
+import { login, logout, reset } from '../redux/slices/auth';
 import Loader from '../components/Loader';
 function LoginScreen() {
   const navigation = useNavigation();
@@ -69,30 +69,29 @@ function LoginScreen() {
     },
     
   })
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState('omundifelix30@gmail.com')
   const [password,setPassword] = useState('')
   const dispatch = useDispatch();
 
-  const { isLoading, user, token } = useSelector(state => state.auth);
-  console.log("token:", JSON.stringify(token));
+  const { isLoading, user, token,message } = useSelector(state => state.auth);
+ 
   useEffect(() => {
-  //   if (isError) {
-  //     toast.error(message)
-  // }
-  // if (isSuccess || user) {
-  //     navigate(route);
-  // }
-
-  // dispatch(reset())
+    if (message) {
+     alert(message)
+    }
+  if (user !== null) {
+      navigation.navigate("HomePage");
+    }
+      dispatch(reset())
     
-  }, [
+  }, [dispatch,message  ])
 
-    // user, isError, isSuccess, message, navigate,route,dispatch
-  ])
-  
   if (isLoading) {   
-    return  <Loader />
+    <Loader />
+    return; 
   }
+  
+
   async function onPress() {
     // //  console.log(user);
     // dispatch(logout())

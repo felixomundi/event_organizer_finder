@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-
+import { useDispatch, useSelector } from "react-redux"
+import Loader from '../components/Loader';
+import { logout } from '../redux/slices/auth';
+// import {useNavigation} from "@react-navigation/native"
 const Account = ({ navigation }) => {
   const [name, setName] = useState('John Doe');
   const [email, setEmail] = useState('johndoe@example.com');
   const [address, setAddress] = useState('');
-
-  const handleSave = () => {
-    // Logic to save profile changes
-    console.log('Profile information saved!');
+  const { isLoading, user, isSuccess, token } = useSelector(state => state.auth);
+  console.log(user);
+  const dispatch = useDispatch();
+  // const navigation = useNavigation();
+  useEffect(() => {
+    if (!token) {
+      navigation.navigate('LoginScreen');
+    }
+  },[token])
+  const handleSave = () => {    
+    
   };
 
-  const handleLogout = () => {
-    // Logic to perform logout
+  const handleLogout = () => {   
     Alert.alert('Logout', 'Are you sure you want to logout?', [
       {
         text: 'Cancel',
@@ -20,13 +29,18 @@ const Account = ({ navigation }) => {
       },
       {
         text: 'Logout',
-        onPress: () => {          
-          navigation.navigate('Home'); 
+        onPress: async() => { 
+        await  dispatch(logout());
+          navigation.navigate('HomePage'); 
         },
         style: 'destructive',
       },
     ]);
   };
+
+  if (isLoading) {
+    return <Loader />
+  }
 
   return (
     <View style={styles.container}>

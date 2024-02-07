@@ -71,11 +71,14 @@ const registerUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
   // Validate Request
   if (!email || !password) {
-  return  res.status(400).json("Please add email and password");
+    return res.status(400).json({
+    message:"Please add email and password"
+  });
   }
 
   // Check if user exists
@@ -85,7 +88,9 @@ const loginUser = async (req, res) => {
   } });
 
   if (!user) {
-   return res.status(400).json("User not found, please signup");
+    return res.status(400).json({
+     message:"User not found, please signup"
+   });
   }
 
   // User exists, check if password is correct
@@ -109,7 +114,14 @@ const loginUser = async (req, res) => {
     
     });
   } else {
-   return res.status(400).json("Invalid email or password");
+    return res.status(400).json({
+     message:"Invalid email or password"
+   });
+  }
+  } catch (error) {
+    return res.status(500).json({
+      message:"Failed to log in"
+    });
   }
 };
 
