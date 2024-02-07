@@ -3,15 +3,13 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 import { useDispatch, useSelector } from "react-redux"
 import Loader from '../components/Loader';
 import { logout } from '../redux/slices/auth';
-// import {useNavigation} from "@react-navigation/native"
 const Account = ({ navigation }) => {
   const [name, setName] = useState('John Doe');
   const [email, setEmail] = useState('johndoe@example.com');
   const [address, setAddress] = useState('');
   const { isLoading, user, isSuccess, token } = useSelector(state => state.auth);
-  console.log(user);
+
   const dispatch = useDispatch();
-  // const navigation = useNavigation();
   useEffect(() => {
     if (!token) {
       navigation.navigate('LoginScreen');

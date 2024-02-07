@@ -46,25 +46,26 @@ const initialState = {
 export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
   try {    
     const response = await axios.post(API_URL + 'login', user, config); 
-    if (response.status == 200) {     
+    if (response.status == 200) {          
       await AsyncStorage.removeItem('user');
-      await AsyncStorage.setItem('user', await JSON.stringify(response.data.user_data))
       await AsyncStorage.removeItem('token');
+      await AsyncStorage.setItem('user', await JSON.stringify(response.data.user_data))
       await AsyncStorage.setItem('token', await response.data.token);
     }  
     return response.data;
-  } catch (error) {
+  } catch (error) {    
     let message;
     await AsyncStorage.removeItem('user');
     await AsyncStorage.removeItem('token');
     if (error) {
-      message = error.response.data
+      message = error.response.data.message
       if (error.response.status === 400) {         
         return thunkAPI.rejectWithValue(message)
       }
      else if (error.response.status === 500) {
       return thunkAPI.rejectWithValue(message)
-      } else {       
+      } else {
+        message = "Network Error"
         return thunkAPI.rejectWithValue(message)
       }      
     }

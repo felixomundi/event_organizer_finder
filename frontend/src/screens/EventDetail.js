@@ -1,11 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Image, StyleSheet, Alert, Button } from 'react-native';
 import { image_url } from '../utils';
+import { useDispatch, useSelector } from "react-redux"
+import {useNavigation} from "@react-navigation/native"
+import Loader from '../components/Loader';
+import {logout, reset} from "../redux/slices/auth"
 const EventDetail = ({ route }) => {
+  const navigation = useNavigation()
   const { event } = route.params;
+  const { user,isLoading } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!user.email) {
+      dispatch(logout())
+      // navigation.navigate('Home')
+    }
+    dispatch(reset())
+  },[user.email])
+  
+
   const handleAddToCart = () => {   
-    Alert.alert('Product added to cart!');
+    if (user.email){
+    // dispatch(addtoCart({event}))
+    } else {
+      dispatch(logout());
+    }
+
+    // Alert.alert('Product added to cart!');
   };
+  if (isLoading) {
+    return <Loader />
+  }
   return (
     <View style={styles.container}>
       <Image source={{uri:image_url(event)} } style={styles.productImage} />

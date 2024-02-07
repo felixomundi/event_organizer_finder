@@ -38,7 +38,7 @@ export const getEvents = createAsyncThunk('events/getEvents', async (_, thunkAPI
 })  
 
 
-export const authSlice = createSlice({
+export const eventSlice = createSlice({
   name: 'events',
   initialState,
   reducers: {
@@ -69,5 +69,5 @@ export const authSlice = createSlice({
   },
 })
 
-export const { reset } = authSlice.actions
-export default authSlice.reducer
+export const { resetEvent } = eventSlice.actions
+export default eventSlice.reducer
