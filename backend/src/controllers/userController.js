@@ -103,8 +103,9 @@ const loginUser = async (req, res) => {
       // token,
       // role,
     user_data: { 
-        id,name,email,phone,role,token
-      } 
+        id,name,email,phone,role
+    }, 
+    token
     
     });
   } else {

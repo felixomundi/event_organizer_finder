@@ -73,8 +73,8 @@ function LoginScreen() {
   const [password,setPassword] = useState('')
   const dispatch = useDispatch();
 
-  const { isLoading, user } = useSelector(state => state.auth);
-  
+  const { isLoading, user, token } = useSelector(state => state.auth);
+  console.log("token:", JSON.stringify(token));
   useEffect(() => {
   //   if (isError) {
   //     toast.error(message)
@@ -94,22 +94,22 @@ function LoginScreen() {
     return  <Loader />
   }
   async function onPress() {
-    //  console.log(user);
-    dispatch(logout())
-    // if (!email) {
-    //  return  alert("Please add an email address")
-    // }
-    // if (!validateEmail(email)) {
-    // return  alert("Invalid email address")
-    // }
-    // if (!password) {
-    //   return  alert("Please Add Password")      
-    // }
-    // let data = {
-    //   email,
-    //   password
-    // }
-    // dispatch(login(data))
+    // //  console.log(user);
+    // dispatch(logout())
+    if (!email) {
+     return  alert("Please add an email address")
+    }
+    if (!validateEmail(email)) {
+    return  alert("Invalid email address")
+    }
+    if (!password) {
+      return  alert("Please Add Password")      
+    }
+    let data = {
+      email,
+      password
+    }
+    dispatch(login(data));
   
   }
   return (
