@@ -18,6 +18,8 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  total: 0,
+  totalTicketItems: 0,
 
 }
 
@@ -56,7 +58,6 @@ export const getTickets = createAsyncThunk('tickets/getTickets', async (_, thunk
     }      
   }
 }) 
-
 // add ticket to cart
 export const addTicketToCart = createAsyncThunk('tickets/addTicketToCart', async (event, thunkAPI) => {
   try {
@@ -92,6 +93,50 @@ export const addTicketToCart = createAsyncThunk('tickets/addTicketToCart', async
     }      
   }
 }) 
+// cart totals
+export const cartTotal = createAsyncThunk("tickets/cartTotal", async (_, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.token;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+    const response = await axios.get(`${API_URL}cart-total`, config);   
+    return response.data;
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);   
+  }
+});
+// total items
+export const totalItems = createAsyncThunk("tickets/totalItems", async (_, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.token;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+    const response = await axios.get(`${API_URL}total-items`, config);   
+    return response.data;
+  } catch (error) {    
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);   
+  }
+});
 
 export const ticketSlice = createSlice({
   name: 'tickets',
@@ -132,6 +177,27 @@ export const ticketSlice = createSlice({
       .addCase(addTicketToCart.rejected, (state, action) => {
         state.isLoading = false
         state.message = action.payload
+      })
+      .addCase(cartTotal.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(cartTotal.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.total = action.payload.total;
+      })
+      .addCase(cartTotal.rejected, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload
+      })
+      .addCase(totalItems.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(totalItems.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.totalTicketItems = action.payload;
+      })
+      .addCase(totalItems.rejected, (state, action) => {
+        state.isLoading = false;
       })
       
        

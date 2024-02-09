@@ -1,10 +1,11 @@
 const express = require("express");
-const { bookTicket, getTickets, getMyTickets } = require("../controllers/ticketController");
+const { bookTicket, getTickets, getMyTickets, cartTotal, totalItems } = require("../controllers/ticketController");
 const router = express.Router();
 const isOrganizer = require("../middleware/organizerMiddleware");
 const isAuthenticated = require("../middleware/authMiddleware");
 router.get("/", isOrganizer, getTickets);
 router.get('/getMyTickets', isAuthenticated, getMyTickets);
 router.post("/", isAuthenticated, bookTicket);
-
+router.get("/cart-total", isAuthenticated, cartTotal);
+router.get("/total-items", isAuthenticated, totalItems);
 module.exports = router;

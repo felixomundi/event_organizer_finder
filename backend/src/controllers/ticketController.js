@@ -1,5 +1,5 @@
 const { Ticket,Event,User } = require("../database/models");
-
+const { Sequelize } = require('sequelize');
 async function getTickets(req, res) {
     try {
         const tickets = await Ticket.findAll({
@@ -74,19 +74,55 @@ async function getMyTickets(req, res) {
             },
             {
                 model: Event,
-                attributes: ["event_name", "image", "entry_fee", "id"],
+                attributes: ["event_name", "location", "image", "entry_fee", "id"],
                 required: true,
             },
             ],
         });
         return res.status(200).json({ tickets: tickets });
-    } catch (error) {
-        console.log(error);
+    } catch (error) {       
         return res.status(500).json({ message:"Error in fetching tickets" })
     }
+}
+const cartTotal = async (req, res) => {
+    try {
+        const cart = await Ticket.findAll({
+            where: { userId: req.user.id },
+            attributes: [               
+                [Sequelize.fn("SUM", Sequelize.cast(Sequelize.col("total"), 'integer')),"total"], 
+            ],
+            raw: true,
+        });
+      
+        let total = 0;
+        for (const obj of cart) {
+            const values = Object.values(obj);
+            total = values[0];            
+        }
+        total = Number(total).toFixed(2);
+
+        return res.status(200).json({total});
+        
+    } catch (error) {
+        return res.status(500).json({ message:"Error in getting cart total" })
+    }
+}
+const totalItems = async (req, res) => {
+    try {
+        let total = 0;
+        const cart = await Ticket.findAll({ where: { userId: req.user.id } });       
+        total = cart.length;    
+        return res.status(200).json(total);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message:"Error in getting total ticket items" }) 
+    }
+    
 }
 module.exports = {
     getTickets,
     bookTicket,
-    getMyTickets
+    getMyTickets,
+    cartTotal,
+    totalItems
 }

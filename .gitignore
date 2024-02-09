@@ -3,3 +3,5 @@ yarn.lock
 .idea
 UML.md
 ngrok/
+cartSlice.js
+Cart.js

@@ -8,12 +8,12 @@ import OnboardingScreen from './src/screens/OnboardingScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 import Account from './src/screens/Account';
-import CartScreen from './src/screens/CartScreen';
+// import CartScreen from './src/screens/CartScreen';
 import Home from './src/screens/Home';
 import EventDetail from './src/screens/EventDetail';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
-import { logout } from './src/redux/slices/auth';
+import CartScreen from './src/screens/CartScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -59,7 +59,7 @@ function MainTabNavigator() {
       }}
     >    
       <Tab.Screen name="HomePage" component={HomeStack}
-          options={({ navigation, route }) => ({    
+          options={({  route }) => ({    
             
               tabBarIcon:({color, size})=>{
                 <Ionicons name='home-outline' color="red" size={size} />                  
@@ -71,16 +71,18 @@ function MainTabNavigator() {
                 })}
       />
       <Tab.Screen name="CartScreen" component={CartScreen}      
-          options={({ navigation }) => ({
+        options={({route}) => ({
+          headerShown:true,
           headerTitle: "Cart Page",        
-          tabBarIcon:({color,size})=>{
+          tabBarIcon:({size})=>{
           <Feather name='shopping-bag' color="black" size={size} />                
           }
           })}
       />    
       <Tab.Screen name="Account" component={Account}      
-        options={({ navigation }) => ({
-        headerTitle: "Account",        
+        options={() => ({
+        headerShown:true,
+        headerTitle: "Account Page",        
         tabBarIcon:({color,size})=>{
         <Feather name='shopping-bag' color="black" size={size} />                
         }
@@ -100,9 +102,7 @@ function Instance() {
     </NavigationContainer>
   )
 }
-
-function App() {
- 
+function App() { 
   return (
     <Provider store={store}>
       <Instance />

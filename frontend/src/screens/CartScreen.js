@@ -2,27 +2,26 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Button } from 'react-native';
 import Auth from "../components/Auth";
 import { useDispatch, useSelector } from 'react-redux';
-import { getTickets } from '../redux/slices/ticket';
+import { cartTotal, getTickets } from '../redux/slices/ticket';
 import { logout } from '../redux/slices/auth';
 import Loader from '../components/Loader';
 import { image_url } from '../utils';
-const CartScreen = () => {
+
+const  CartScreen = () => {
   const dispatch = useDispatch();
-  const { tickets,isLoading } = useSelector(state => state.tickets); 
+  const { tickets,isLoading, total, totalTicketItems } = useSelector(state => state.tickets); 
   const {user} = useSelector(state=>state.auth)
   useEffect(() => {
     if (!user.email) {
       dispatch(logout())
     } else {
-      dispatch(getTickets())
+      dispatch(getTickets());
+      dispatch(cartTotal());
     }
   }, [user.email]);
   
   <Auth/>
-  //   const cartItems = [
-  //   { id: 1, name: 'Product 1', price: 20, quantity: 2, image: require("../../assets/images/splash.jpg") },
-  //   { id: 2, name: 'Product 2', price: 30, quantity: 1, image: require("../../assets/images/splash.jpg")  },   
-  // ];
+  
   const onPressCheckout = () => {
     
   }
@@ -43,10 +42,11 @@ const CartScreen = () => {
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
         {tickets.map((item, index) => (
           <View key={index} style={styles.itemContainer}>
-            <Image source={ image_url(item) } style={styles.image} />
+            <Image source={ {uri:image_url(item.Event)} } style={styles.image} />
             <View style={styles.itemDetails}>
-              <Text style={styles.itemName}>{item.event_name}</Text>
-              <Text style={styles.itemPrice}>${item.entry_fee}</Text>
+              <Text style={styles.itemName}>Event Name : {item.Event.event_name}</Text>
+              <Text style={styles.itemName}>Event Venue : {item.Event.location}</Text>
+              <Text style={styles.itemPrice}>Entry Fee: Ksh.{item.Event.entry_fee}</Text>
             </View>
             <TouchableOpacity
               style={styles.removeButton}
@@ -55,9 +55,16 @@ const CartScreen = () => {
             </TouchableOpacity>
           </View>
         ))}
-      </ScrollView>    
+          </ScrollView>    
+          <View>
+            <Text style={{ backgroundColor: "yellow", fontSize: 20, padding: 10 }}>Total Items {totalTicketItems }</Text>
+          </View>
        <View style={styles.totalContainer}>
-        <Text>Total: $300</Text>
+            <Text>Total: Ksh. {total}</Text>
+            <TouchableOpacity onPress={() => {
+              
+            }}
+            style={styles.btn_danger}><Text style={styles.btn_text}>Clear Cart</Text></TouchableOpacity>
         <Button title="Checkout" style={styles.checkout_button} onPress={onPressCheckout} />
         </View>
       </>)}
@@ -94,7 +101,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemName: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 8,
   },
@@ -121,8 +128,21 @@ const styles = StyleSheet.create({
   checkout_button: {
     backgroundColor: 'green',
        borderRadius: 8,
-    }
+  },
+  btn_danger: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+  },
+  btn_text: {   
+      color: '#fff',
+      textAlign: 'center',
+      fontWeight: 'bold',
+  
+  }
  
 });
 
-export default CartScreen;
+export default CartScreen 
+
+
