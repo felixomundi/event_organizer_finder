@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
-import { Provider, useSelector } from 'react-redux'
+import { Provider, useDispatch, useSelector } from 'react-redux'
 import { store } from './src/redux/store'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -13,6 +13,7 @@ import Home from './src/screens/Home';
 import EventDetail from './src/screens/EventDetail';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
+import { logout } from './src/redux/slices/auth';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -91,7 +92,8 @@ function MainTabNavigator() {
 }
 
 function Instance() {
-  const {token} = useSelector(state => state.auth);
+  const { token } = useSelector(state => state.auth);
+ 
   return (
     <NavigationContainer>
         {token ? (<MainTabNavigator/>) : (<AuthStack/>)}      

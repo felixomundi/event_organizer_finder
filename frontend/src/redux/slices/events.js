@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
-const API_URL = `http://192.168.171.110:5000/api/v1/events/`
+const API_URL = `http://192.168.171.114:5000/api/v1/events/`
 
 const config = {
   headers: {
@@ -13,7 +13,7 @@ const config = {
 
 
 const initialState = { 
-  event: {} ,
+  event: {},
   events: [],
   isError: false,
   isSuccess: false,
@@ -29,7 +29,6 @@ export const getEvents = createAsyncThunk('events/getEvents', async (_, thunkAPI
     const response = await axios.get(API_URL, config);    
     return response.data;
   } catch (error) {   
-    console.log("error:------------------------",error);
     if (error) {   
       const message = error.response.data.message;
       return thunkAPI.rejectWithValue(message)
@@ -42,11 +41,11 @@ export const eventSlice = createSlice({
   name: 'events',
   initialState,
   reducers: {
-    reset: (state) => {
+    resetEvent: (state) => {
       state.isLoading = false
       state.isSuccess = false
       state.isError = false
-      state.message = ''
+      state.message = ""
     },
    
   },

@@ -70,7 +70,7 @@ function LoginScreen() {
     
   })
   const [email, setEmail] = useState('omundifelix30@gmail.com')
-  const [password,setPassword] = useState('')
+  const [password,setPassword] = useState('Fo123456')
   const dispatch = useDispatch();
 
   const { isLoading, user, token,message } = useSelector(state => state.auth);

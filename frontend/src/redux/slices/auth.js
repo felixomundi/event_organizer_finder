@@ -4,7 +4,7 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const API_URL = `http://192.168.171.110:5000/api/v1/users/` 
+const API_URL = `http://192.168.171.114:5000/api/v1/users/` 
 
 const config = {
   headers: {
@@ -128,3 +128,7 @@ export const authSlice = createSlice({
 
 export const { reset } = authSlice.actions
 export default authSlice.reducer
+
+// (error.response && error.response.data && error.response.data.message) ||
+//       error.message ||
+//       error.toString()

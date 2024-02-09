@@ -1,15 +1,13 @@
-const { Ticket,Event } = require("../database/models");
+const { Ticket,Event,User } = require("../database/models");
 
 async function getTickets(req, res) {
     try {
         const tickets = await Ticket.findAll({
             where:{creatorId:req.user.id}
         });
-        return res.status(200).json({
-            tickets
-        })
+        return res.status(200).json({ tickets: tickets });
     } catch (error) {
-        return res.status(200).json({
+        return res.status(500).json({
             message:"Error in fetching tickets"
         })
     }
@@ -53,9 +51,9 @@ async function bookTicket(req, res) {
             total,
             creatorId:req.user.id,
         })
-
         return res.status(201).json({
-            ticket:new_ticket
+            ticket: new_ticket,
+            message:'Event booked successfully'
         })
         
     } catch (error) {
@@ -64,7 +62,31 @@ async function bookTicket(req, res) {
         })
     }
 }
+async function getMyTickets(req, res) {
+    try {
+        const tickets = await Ticket.findAll({
+            where: { userId: req.user.id },
+            include: [{
+                model: User,
+                attributes: ["name"],
+                required:true,
+            
+            },
+            {
+                model: Event,
+                attributes: ["event_name", "image", "entry_fee", "id"],
+                required: true,
+            },
+            ],
+        });
+        return res.status(200).json({ tickets: tickets });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message:"Error in fetching tickets" })
+    }
+}
 module.exports = {
     getTickets,
-    bookTicket
+    bookTicket,
+    getMyTickets
 }

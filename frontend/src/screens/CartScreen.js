@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Button } from 'react-native';
-
+import Auth from "../components/Auth";
+import { useDispatch, useSelector } from 'react-redux';
+import { getTickets } from '../redux/slices/ticket';
+import { logout } from '../redux/slices/auth';
+import Loader from '../components/Loader';
+import { image_url } from '../utils';
 const CartScreen = () => {
-    const cartItems = [
-    { id: 1, name: 'Product 1', price: 20, quantity: 2, image: require("../../assets/images/splash.jpg") },
-    { id: 2, name: 'Product 2', price: 30, quantity: 1, image: require("../../assets/images/splash.jpg")  },
-   
-  ];
+  const dispatch = useDispatch();
+  const { tickets,isLoading } = useSelector(state => state.tickets); 
+  const {user} = useSelector(state=>state.auth)
+  useEffect(() => {
+    if (!user.email) {
+      dispatch(logout())
+    } else {
+      dispatch(getTickets())
+    }
+  }, [user.email]);
+  
+  <Auth/>
+  //   const cartItems = [
+  //   { id: 1, name: 'Product 1', price: 20, quantity: 2, image: require("../../assets/images/splash.jpg") },
+  //   { id: 2, name: 'Product 2', price: 30, quantity: 1, image: require("../../assets/images/splash.jpg")  },   
+  // ];
   const onPressCheckout = () => {
     
   }
@@ -14,16 +30,23 @@ const CartScreen = () => {
     
   }
 
-  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  // const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+
+  if (isLoading) {
+    return <Loader />
+  }
+
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        {cartItems.map((item, index) => (
+      {!isLoading && tickets.length === 0 ? (<></>) : (
+      <>
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        {tickets.map((item, index) => (
           <View key={index} style={styles.itemContainer}>
-            <Image source={ item.image } style={styles.image} />
+            <Image source={ image_url(item) } style={styles.image} />
             <View style={styles.itemDetails}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemPrice}>${item.price}</Text>
+              <Text style={styles.itemName}>{item.event_name}</Text>
+              <Text style={styles.itemPrice}>${item.entry_fee}</Text>
             </View>
             <TouchableOpacity
               style={styles.removeButton}
@@ -32,12 +55,13 @@ const CartScreen = () => {
             </TouchableOpacity>
           </View>
         ))}
-      </ScrollView>     
-      
+      </ScrollView>    
        <View style={styles.totalContainer}>
         <Text>Total: $300</Text>
         <Button title="Checkout" style={styles.checkout_button} onPress={onPressCheckout} />
         </View>
+      </>)}
+
     </View>
   );
 };

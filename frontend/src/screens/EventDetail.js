@@ -2,41 +2,42 @@ import React, { useEffect } from 'react';
 import { View, Text, Image, StyleSheet, Alert, Button } from 'react-native';
 import { image_url } from '../utils';
 import { useDispatch, useSelector } from "react-redux"
-import {useNavigation} from "@react-navigation/native"
+import {logout} from "../redux/slices/auth"
+import Auth from '../components/Auth';
+import { addTicketToCart, resetTicket } from '../redux/slices/ticket';
 import Loader from '../components/Loader';
-import {logout, reset} from "../redux/slices/auth"
 const EventDetail = ({ route }) => {
-  const navigation = useNavigation()
   const { event } = route.params;
-  const { user,isLoading } = useSelector(state => state.auth);
+  const { user } = useSelector(state => state.auth);
   const dispatch = useDispatch();
-
+  const { isLoading, message, isError } = useSelector(state => state.tickets);
+ 
   useEffect(() => {
-    if (!user.email) {
-      dispatch(logout())
-      // navigation.navigate('Home')
+    if (message) {
+      Alert.alert(message);
     }
-    dispatch(reset())
-  },[user.email])
-  
+    dispatch(resetTicket())
+  }, [message]);
+  <Auth />
 
   const handleAddToCart = () => {   
-    if (user.email){
-    // dispatch(addtoCart({event}))
+    if (user.email) {
+      const data ={ event_id : event.id};
+      dispatch(addTicketToCart(data))
     } else {
       dispatch(logout());
-    }
-
-    // Alert.alert('Product added to cart!');
+    }   
   };
   if (isLoading) {
     return <Loader />
   }
+  
   return (
     <View style={styles.container}>
-      <Image source={{uri:image_url(event)} } style={styles.productImage} />
-      <Text style={styles.productName}>{event.event_name}</Text>
-      <Text style={styles.productPrice}>{event.entry_fee}</Text>
+      <Image source={{ uri: image_url(event) }} style={styles.productImage} />
+      <View style={{flexDirection:'row'}}><Text style={styles.text}>Location: { event.location} </Text></View>
+      <Text style={styles.productName}>Event Name: {event.event_name} </Text>
+      <Text style={styles.productPrice}>Entry Fee: Ksh. {event.entry_fee}</Text>
       <Text style={styles.productDescription}>{event.details}</Text>
       <Button title="Book Event" style={styles.add_to_cart_button} onPress={handleAddToCart} />
     </View>
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   productName: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
   },
@@ -63,6 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#888',
     marginBottom: 8,
+    fontWeight:'bold'
   },
   productDescription: {
     fontSize: 16,
@@ -70,7 +72,9 @@ const styles = StyleSheet.create({
   add_to_cart_button: {
     marginTop: 30,
     borderRadius:8
-  }
+  },
+ text: { fontSize: 25, fontWeight: "800", color: 'green'  },
 });
+
 
 export default EventDetail;

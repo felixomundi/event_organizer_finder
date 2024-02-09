@@ -7,10 +7,10 @@ function validateEmail(email) {
 
 function image_url(event) {
     try {
-        const url =  `http://192.168.171.108:5000/`+ event?.image
+        const url =  `http://192.168.171.114:5000/`+ event?.image
         return url 
       } catch (error) {
         
       }
 }
-export  { validateEmail,image_url }
+export   { validateEmail,image_url }

@@ -14,12 +14,14 @@ const categories = [
 ];
 
 const Home = () => {
-  const { events, isLoading, isError, message } = useSelector(state => state.events);  
-  const dispatch = useDispatch()
+  const { events, isLoading, isError, message } = useSelector(state => state.events); 
+  const { user } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getEvents())    
-   
-  },[dispatch])
+      
+      dispatch(getEvents())
+
+  }, [dispatch,user])
   return (
     <View style={styles.container}>
         <View style={styles.header}>
