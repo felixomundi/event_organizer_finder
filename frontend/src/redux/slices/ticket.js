@@ -19,7 +19,7 @@ const initialState = {
   isLoading: false,
   message: "",
   total: 0,
-  totalTicketItems: 0,
+  // totalTicketItems: 0,
 
 }
 
@@ -116,7 +116,31 @@ export const cartTotal = createAsyncThunk("tickets/cartTotal", async (_, thunkAP
   }
 });
 // total items
-export const totalItems = createAsyncThunk("tickets/totalItems", async (_, thunkAPI) => {
+// export const totalItems = createAsyncThunk("tickets/totalItems", async (_, thunkAPI) => {
+//   try {
+//     const token = thunkAPI.getState().auth.token;
+//     const config = {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         "Content-Type": "application/json",
+//       },
+//     }
+//     const response = await axios.get(`${API_URL}total-items`, config);
+//     return response.data;
+//   } catch (error) {
+//     const message =
+//       (error.response &&
+//         error.response.data &&
+//         error.response.data.message) ||
+//       error.message ||
+//       error.toString();
+//     return thunkAPI.rejectWithValue(message);
+//   }
+// });
+
+
+//clear cart
+export const clearCart = createAsyncThunk('tickets/clearCart', async (_, thunkAPI) => {
   try {
     const token = thunkAPI.getState().auth.token;
     const config = {
@@ -125,16 +149,64 @@ export const totalItems = createAsyncThunk("tickets/totalItems", async (_, thunk
         "Content-Type": "application/json",
       },
     }
-    const response = await axios.get(`${API_URL}total-items`, config);   
+    const response = await axios.get(`${API_URL}/clear-cart`, config);
     return response.data;
-  } catch (error) {    
-    const message =
-      (error.response &&
-        error.response.data &&
-        error.response.data.message) ||
-      error.message ||
-      error.toString();
-    return thunkAPI.rejectWithValue(message);   
+  } catch (error) {
+    let message;    
+    if (error) {
+      message = error.response.data.message
+      if (error.response.status === 404) {        
+        return thunkAPI.rejectWithValue(message)
+      }
+      else if (error.response.status === 400) {
+        return thunkAPI.rejectWithValue(message)
+      }
+     else if (error.response.status === 401) {
+        return thunkAPI.rejectWithValue(message)
+      }
+     else if (error.response.status === 500) {
+        return thunkAPI.rejectWithValue(message)
+      } else {
+        message = "Error in clearing tickets"
+        return thunkAPI.rejectWithValue(message)
+      }
+    }   
+  }
+});
+// delete cart item
+export const deleteCartItem = createAsyncThunk("tickets/deleteCartItem", async (cartId, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.token;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    }   
+    const response = await axios.post(`${API_URL}delete-cart-item`, { cartId: cartId }, config);
+    return response.data;
+  } catch (error) {
+    let message
+    if (error) {
+      message = error.response.data.message
+      if (error.response.status === 404) {        
+        return thunkAPI.rejectWithValue(message)
+      }
+      else if (error.response.status === 400) {
+        return thunkAPI.rejectWithValue(message)
+      }
+     else if (error.response.status === 401) {
+        return thunkAPI.rejectWithValue(message)
+      }
+     else if (error.response.status === 500) {
+        return thunkAPI.rejectWithValue(message)
+      } else {
+        message = "Error in clearing tickets"
+        return thunkAPI.rejectWithValue(message)
+      }
+    
+  }  
+    
   }
 });
 
@@ -189,17 +261,38 @@ export const ticketSlice = createSlice({
         state.isLoading = false;
         state.message = action.payload
       })
-      .addCase(totalItems.pending, (state) => {
+      // .addCase(totalItems.pending, (state) => {
+      //   state.isLoading = true;
+      // })
+      // .addCase(totalItems.fulfilled, (state, action) => {
+      //   state.isLoading = false;
+      //   state.totalTicketItems = action.payload;
+      // })
+      // .addCase(totalItems.rejected, (state, action) => {
+      //   state.isLoading = false;
+      // })
+      .addCase(clearCart.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(totalItems.fulfilled, (state, action) => {
+      .addCase(clearCart.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.totalTicketItems = action.payload;
+        state.message = action.payload.message;
       })
-      .addCase(totalItems.rejected, (state, action) => {
+      .addCase(clearCart.rejected, (state, action) => {
         state.isLoading = false;
+        state.message = action.payload
       })
-      
+      .addCase(deleteCartItem.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteCartItem.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(deleteCartItem.rejected, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload
+      })
        
   },
 })

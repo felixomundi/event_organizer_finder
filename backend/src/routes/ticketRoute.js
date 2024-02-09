@@ -1,11 +1,13 @@
 const express = require("express");
-const { bookTicket, getTickets, getMyTickets, cartTotal, totalItems } = require("../controllers/ticketController");
+const { bookTicket, getTickets, getMyTickets, cartTotal, totalItems, clearCart, deleteCartItem } = require("../controllers/ticketController");
 const router = express.Router();
 const isOrganizer = require("../middleware/organizerMiddleware");
 const isAuthenticated = require("../middleware/authMiddleware");
 router.get("/", isOrganizer, getTickets);
 router.get('/getMyTickets', isAuthenticated, getMyTickets);
 router.post("/", isAuthenticated, bookTicket);
+router.post("/delete-cart-item", isAuthenticated, deleteCartItem);
 router.get("/cart-total", isAuthenticated, cartTotal);
 router.get("/total-items", isAuthenticated, totalItems);
+router.get("/clear-cart", isAuthenticated, clearCart);
 module.exports = router;

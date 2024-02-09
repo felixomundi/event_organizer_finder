@@ -119,10 +119,58 @@ const totalItems = async (req, res) => {
     }
     
 }
+const clearCart = async(req, res) => {
+    try {
+      await Ticket.destroy({ where: { userId: req.user.id } });
+        return res.status(200).json({           
+            message:"Cart Cleared",
+           })
+       
+    } catch (error) {
+        return res.status(500).json({
+            message:"Something went wrong",
+        })  
+    }
+}
+const deleteCartItem = async (req, res) => {   
+    try {
+        const cartId = req.body.cartId;  
+        if (!cartId) {
+            return res.status(400).json({
+                "message": "No Cart Item Selected",
+                "status":400,
+            }); 
+        }
+        else {            
+        
+            const cart = await Ticket.findOne({where:{id: cartId, userId:req.user.id}});
+        if (cart) {
+            await cart.destroy();
+            return res.status(200).json({
+                "message": "Cart Item Deleted"                
+            }); 
+        } else {
+            return res.status(404).json({
+                "message": "Cart Item Not Found"                
+            });     
+        }
+        } 
+    } catch (error) {
+        if (error) {
+            return res.status(500).json({
+                message: "Something went wrong When deleting",
+            });            
+        }
+        
+    }
+    
+}
 module.exports = {
     getTickets,
     bookTicket,
     getMyTickets,
     cartTotal,
-    totalItems
+    totalItems,
+    clearCart,
+    deleteCartItem,
 }

@@ -1,16 +1,18 @@
+"use strict"
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Button } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Button, Alert } from 'react-native';
 import Auth from "../components/Auth";
 import { useDispatch, useSelector } from 'react-redux';
-import { cartTotal, getTickets } from '../redux/slices/ticket';
+import { cartTotal, clearCart, deleteCartItem, getTickets, resetTicket } from '../redux/slices/ticket';
 import { logout } from '../redux/slices/auth';
 import Loader from '../components/Loader';
 import { image_url } from '../utils';
-
+import {useNavigation} from "@react-navigation/native"
 const  CartScreen = () => {
   const dispatch = useDispatch();
-  const { tickets,isLoading, total, totalTicketItems } = useSelector(state => state.tickets); 
-  const {user} = useSelector(state=>state.auth)
+  const { tickets, isLoading, total, message } = useSelector(state => state.tickets); 
+  const { user } = useSelector(state => state.auth);
+  const navigation = useNavigation();
   useEffect(() => {
     if (!user.email) {
       dispatch(logout())
@@ -18,18 +20,40 @@ const  CartScreen = () => {
       dispatch(getTickets());
       dispatch(cartTotal());
     }
-  }, [user.email]);
+    if (message) {
+      alert(message)
+    }
+    dispatch(resetTicket())
+  }, [user.email,message,dispatch]);
   
   <Auth/>
   
   const onPressCheckout = () => {
     
   }
-  const onPressRemoveItem = () => {
-    
+  const onPressRemoveItem = (item) => {
+    if (user.email) {
+      dispatch(deleteCartItem(item));
+      dispatch(getTickets());
+      dispatch(cartTotal());
+   }
   }
 
-  // const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  function handleDeleteCartItem (item){
+    Alert.alert('Clear Cart', 'Are you sure you want to delete this cart item?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        onPress: () => { 
+         dispatch(deleteCartItem(item));          
+        },
+        style: 'destructive',
+      },
+    ]);
+  }
 
   if (isLoading) {
     return <Loader />
@@ -37,7 +61,19 @@ const  CartScreen = () => {
 
   return (
     <View style={styles.container}>
-      {!isLoading && tickets.length === 0 ? (<></>) : (
+      {!isLoading && tickets.length === 0 ? (
+        <View>
+          <Text style={{
+            fontSize: 20,
+            color:'red'
+          }}>Empty Cart</Text>
+          <TouchableOpacity onPress={() => {
+            navigation.navigate("HomePage")
+           }} style={[styles.button]}>
+             <Text style={[styles.text]}>Book New Ticket</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
       <>
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
         {tickets.map((item, index) => (
@@ -50,19 +86,19 @@ const  CartScreen = () => {
             </View>
             <TouchableOpacity
               style={styles.removeButton}
-              onPress={() => onPressRemoveItem(item.id)}>
+              onPress={() => handleDeleteCartItem(item.id)}>
               <Text style={styles.removeButtonText}>Remove</Text>           
             </TouchableOpacity>
           </View>
         ))}
           </ScrollView>    
           <View>
-            <Text style={{ backgroundColor: "yellow", fontSize: 20, padding: 10 }}>Total Items {totalTicketItems }</Text>
+            <Text style={{ backgroundColor: "yellow", fontSize: 20, padding: 10 }}>Total Items {tickets?.length }</Text>
           </View>
        <View style={styles.totalContainer}>
             <Text>Total: Ksh. {total}</Text>
             <TouchableOpacity onPress={() => {
-              
+              dispatch(clearCart())
             }}
             style={styles.btn_danger}><Text style={styles.btn_text}>Clear Cart</Text></TouchableOpacity>
         <Button title="Checkout" style={styles.checkout_button} onPress={onPressCheckout} />
@@ -139,7 +175,18 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       fontWeight: 'bold',
   
-  }
+  },
+  button: {
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop:10
+  },
+  text: {
+    color: 'white',
+    fontSize: 16,
+  },
  
 });
 
