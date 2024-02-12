@@ -4,7 +4,7 @@ import logger from 'redux-logger'
 
 export const store = configureStore({
   reducer: rootReducer,
-  devTools: true,
+  // devTools: true,
   
 middleware: (getDefaultMiddleware) => getDefaultMiddleware({
     serializableCheck: false

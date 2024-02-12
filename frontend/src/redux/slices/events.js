@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
-const API_URL = `http://192.168.171.114:5000/api/v1/events/`
+const API_URL = `http://192.168.171.216:5000/api/v1/events/`
 
 const config = {
   headers: {

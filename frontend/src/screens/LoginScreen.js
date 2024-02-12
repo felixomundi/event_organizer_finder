@@ -10,7 +10,7 @@ function LoginScreen() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const { isLoading, user, token, message } = useSelector(state => state.auth);
+  const { isLoading, user, message } = useSelector(state => state.auth);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 

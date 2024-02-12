@@ -18,13 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.INTEGER,
     status: DataTypes.STRING,
     total: DataTypes.DECIMAL,
-    coupon_code: DataTypes.STRING,
     payment_mode: DataTypes.STRING,
-    address: DataTypes.STRING,
-    shipcode: DataTypes.STRING,
     tracking_no: DataTypes.STRING,
-    discount: DataTypes.DECIMAL,
-    discounted_total:DataTypes.DECIMAL,
   }, {
     sequelize,
     modelName: 'Order',

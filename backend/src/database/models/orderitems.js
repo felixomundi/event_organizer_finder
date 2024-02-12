@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.belongsTo(models.Order);
-      this.belongsTo(models.Product)
+      // this.belongsTo(models.Product)
+      this.belongsTo(models.Event)
     }
   }
   OrderItems.init({

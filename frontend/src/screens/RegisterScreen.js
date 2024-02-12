@@ -16,7 +16,7 @@ function RegisterScreen() {
   const { isLoading, user, message } = useSelector(state => state.auth);
   useEffect(() => {
     if (user && user.email) {
-      navigation.navigate('LoginScreen')
+      navigation.navigate('LoginScreen');
     } else {
       dispatch(logout())
     } if (message) {

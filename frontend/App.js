@@ -21,7 +21,11 @@ function HomeStack(){
   return (
     <Stack.Navigator>
       <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />       
-      <Stack.Screen name="EventDetail" component={EventDetail} options={{ headerShown: true }} /> 
+      <Stack.Screen name="EventDetail" component={EventDetail} options={({route})=>({
+      headerShown: true,
+        headerTitle: route?.params?.event?.event_name ? route?.params?.event?.event_name : 'EventDetail'
+      }
+      )} /> 
     </Stack.Navigator>
   );
 }
@@ -53,6 +57,7 @@ function MainTabNavigator() {
         name="HomePage"
         component={HomeStack}
         options={({ route }) => ({
+          headerShown:false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name='home-outline' color={color} size={size} />
           ),

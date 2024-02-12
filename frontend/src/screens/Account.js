@@ -4,10 +4,9 @@ import { useDispatch, useSelector } from "react-redux"
 import Loader from '../components/Loader';
 import { logout, reset } from '../redux/slices/auth';
 const Account = ({ navigation }) => {
-  const [name, setName] = useState('John Doe');
-  const [email, setEmail] = useState('johndoe@example.com');
-  const [address, setAddress] = useState('');
   const { isLoading, user, isSuccess } = useSelector(state => state.auth);
+  const [name, setName] = useState(user && user.name || "");
+  const [email, setEmail] = useState(user && user.email) || "";
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -60,14 +59,7 @@ const Account = ({ navigation }) => {
         onChangeText={setEmail}
         placeholder="Email"
         keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        value={address}
-        onChangeText={setAddress}
-        placeholder="Address"
-        multiline
-      />
+      />    
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
         <Text style={styles.buttonText}>Save</Text>
       </TouchableOpacity>
