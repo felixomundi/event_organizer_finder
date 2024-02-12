@@ -14,30 +14,25 @@ const  CartScreen = () => {
   const { user } = useSelector(state => state.auth);
   const navigation = useNavigation();
   useEffect(() => {
-    if (!user.email) {
-      dispatch(logout())
-    } else {
+    if (user && user.email) {
       dispatch(getTickets());
       dispatch(cartTotal());
+    } else {
+      dispatch(logout())
     }
     if (message) {
       alert(message)
     }
     dispatch(resetTicket())
-  }, [user.email,message,dispatch]);
+  }, [user,message,dispatch]);
   
-  <Auth/>
+  () => {
+    <Auth/>
+ }
   
   const onPressCheckout = () => {
     
-  }
-  const onPressRemoveItem = (item) => {
-    if (user.email) {
-      dispatch(deleteCartItem(item));
-      dispatch(getTickets());
-      dispatch(cartTotal());
-   }
-  }
+  } 
 
   function handleDeleteCartItem (item){
     Alert.alert('Clear Cart', 'Are you sure you want to delete this cart item?', [
@@ -48,13 +43,38 @@ const  CartScreen = () => {
       {
         text: 'Delete',
         onPress: () => { 
-         dispatch(deleteCartItem(item));          
+          if (user && user.email) {
+            dispatch(deleteCartItem(item));
+            dispatch(getTickets());
+            dispatch(cartTotal());
+          } else {
+            dispatch(logout())
+         }  
         },
         style: 'destructive',
       },
     ]);
   }
-
+  function handleClearCart() {
+    Alert.alert('Clear Cart', 'Are you sure you want to clear your cart', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Clear Cart',
+        onPress: () => { 
+          if (user && user.email) {
+            dispatch(clearCart()); 
+          }         
+          else {
+            dispatch(logout())
+          }
+        },
+        style: 'destructive',
+      },
+    ]);
+  }
   if (isLoading) {
     return <Loader />
   }
@@ -98,7 +118,7 @@ const  CartScreen = () => {
        <View style={styles.totalContainer}>
             <Text>Total: Ksh. {total}</Text>
             <TouchableOpacity onPress={() => {
-              dispatch(clearCart())
+              handleClearCart()
             }}
             style={styles.btn_danger}><Text style={styles.btn_text}>Clear Cart</Text></TouchableOpacity>
         <Button title="Checkout" style={styles.checkout_button} onPress={onPressCheckout} />

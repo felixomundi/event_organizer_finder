@@ -27,7 +27,11 @@ module.exports = {
       },
       phone: {
         type: Sequelize.STRING,
+        allowNull:false,
         defaultValue: "+254712345678",
+        validate:{
+          notEmpty: true,
+      },
       },
       role: {
         type: Sequelize.STRING,

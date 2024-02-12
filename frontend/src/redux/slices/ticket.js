@@ -243,7 +243,6 @@ export const ticketSlice = createSlice({
       .addCase(addTicketToCart.fulfilled, (state, action) => {
         state.isLoading = false
         state.message = action.payload.message
-        console.log(state.message);
         state.ticket = action.payload.ticket
       })
       .addCase(addTicketToCart.rejected, (state, action) => {

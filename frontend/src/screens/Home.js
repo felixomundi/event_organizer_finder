@@ -19,11 +19,11 @@ const Home = () => {
   const { user } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (user.email ===  null) {
-        dispatch(logout())
+    if (user && user.email) {
+      dispatch(getEvents())
     }
     else {      
-      dispatch(getEvents())
+      dispatch(logout())
     }
 
   }, [dispatch,user])

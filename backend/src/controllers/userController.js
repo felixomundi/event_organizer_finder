@@ -10,8 +10,8 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // Generate JWT Token
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+const generateToken = async(id) => {
+  return await jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: '2d',
   })
 }
@@ -23,25 +23,43 @@ const validateEmail = (email) => {
 };
 
 const registerUser = async (req, res) => {
+ try {
   const { name, email, password } = req.body;
-
   // Validation
   if (!name || !email || !password) {
-    return res.status(400).json("Please add all fields");
+    return res.status(400).json({
+      message:"Please add user name"
+    });
+  }
+  if (!email) {
+    return res.status(400).json({
+      message:"Please add user email"
+    });
+  }
+  if (!password) {
+    return res.status(400).json({
+      message:"Please add user password"
+    });
   }
 
   if (!validateEmail(email)) {
-    return res.status(400).json('Please Enter a valid email address.')
+    return res.status(400).json({
+      message:'Please Enter a valid email address.'
+    })
     }
   if (password.length < 6) {
-    return  res.status(400).json("Password must be up to 6 characters");
+    return res.status(400).json({
+      message:"Password must be up to 6 characters"
+    });
   }
 
   // Check if user email already exists
   const userExists = await User.findOne({ where:{email:email} });
 
   if (userExists) {
-    return  res.status(400).json("Email already taken");
+    return res.status(400).json({
+      message:"Email already taken"
+    });
     }
 
   // Create new user
@@ -49,25 +67,33 @@ const registerUser = async (req, res) => {
     name,
     email,
     password,
+    phone: '+254712345678',
+    role:'user'
   });
-
   //   Generate Token
-  const token = generateToken(user.id);
-  
-  if (user) {
-    const { id, name, email,  phone,role } = user;
-    return  res.status(201).json({
-      id,
-      name,
-      email,     
-      phone,       
-      token,
-      role,
-    
+   const token = await generateToken(user.id);   
+   if (user && token) {     
+     return res.status(201).json({
+       user_data: {
+         id: user.id,
+         name:user.name,
+         email: user.email,
+         phone: user.phone,
+         role:user.role,
+       },
+       token
+     })
+   } else {
+    return res.status(400).json({
+      message:"Invalid user data"
     });
-  } else {
-    return res.status(400).json("Invalid user data");
-  }
+   }
+ 
+ } catch (error) {
+  return res.status(500).json({
+    message:"Invalid user data"
+  });
+ }
 };
 
 const loginUser = async (req, res) => {
@@ -97,7 +123,7 @@ const loginUser = async (req, res) => {
   const passwordIsCorrect = await bcrypt.compare(password, user.password);
 
   //   Generate Token
-  const token = generateToken(user.id);
+  const token = await generateToken(user.id);
   if (user && passwordIsCorrect) {
     const { id, name, email, phone,role } = user;
   return  res.status(200).json({

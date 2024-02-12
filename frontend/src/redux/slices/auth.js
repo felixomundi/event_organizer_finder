@@ -40,7 +40,39 @@ const initialState = {
   message: "",
 
 }
-
+// register user
+export const register = createAsyncThunk('auth/register', async (user, thunkAPI) => {
+  try {    
+    const response = await axios.post(API_URL + 'register', user, config); 
+    if (response.status == 200) {          
+      await AsyncStorage.removeItem('user');
+      await AsyncStorage.removeItem('token');
+      await AsyncStorage.setItem('user', await JSON.stringify(response.data.user_data))
+      await AsyncStorage.setItem('token', await response.data.token);
+    }  
+    return response.data;
+  } catch (error) {    
+    let message;
+    await AsyncStorage.removeItem('user');
+    await AsyncStorage.removeItem('token');
+    if (error) {
+      message = error.response.data.message
+      if (error.response.status === 400) {         
+        return thunkAPI.rejectWithValue(message)
+      }
+     else if (error.response.status === 500) {
+      return thunkAPI.rejectWithValue(message)
+      }
+      else if (error.response.status === 404) {        
+        return thunkAPI.rejectWithValue(message)
+      }
+      else {
+        message = "Network Error"
+        return thunkAPI.rejectWithValue(message)
+      }      
+    }    
+  }
+})  
 
 // Login user
 export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
@@ -96,7 +128,19 @@ export const authSlice = createSlice({
    
   },
   extraReducers: (builder) => {
-    builder     
+    builder   
+    .addCase(register.pending, (state) => {
+      state.isLoading = true
+    })
+    .addCase(register.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.user = action.payload.user_data
+    })
+    .addCase(register.rejected, (state, action) => {
+      state.isLoading = false
+      state.message = action.payload
+      state.user = null
+    })  
       .addCase(login.pending, (state) => {
         state.isLoading = true
       })

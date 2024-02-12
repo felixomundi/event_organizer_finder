@@ -2,19 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useDispatch, useSelector } from "react-redux"
 import Loader from '../components/Loader';
-import { logout } from '../redux/slices/auth';
+import { logout, reset } from '../redux/slices/auth';
 const Account = ({ navigation }) => {
   const [name, setName] = useState('John Doe');
   const [email, setEmail] = useState('johndoe@example.com');
   const [address, setAddress] = useState('');
-  const { isLoading, user, isSuccess, token } = useSelector(state => state.auth);
+  const { isLoading, user, isSuccess } = useSelector(state => state.auth);
 
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!token) {
+    if (user && user.email) {
+
+    } else {
+      dispatch(logout())
       navigation.navigate('LoginScreen');
     }
-  },[token])
+    dispatch(reset())
+  }, [user,navigation,dispatch])
+  
   const handleSave = () => {    
     
   };
@@ -28,7 +33,7 @@ const Account = ({ navigation }) => {
       {
         text: 'Logout',
         onPress: async() => { 
-        await  dispatch(logout());
+          dispatch(logout());
           navigation.navigate('HomePage'); 
         },
         style: 'destructive',
