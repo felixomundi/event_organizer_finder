@@ -28,7 +28,6 @@ app.use(cors(corsOptions));
 // pass json data
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: true })); 
-
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use('/', express.static(path.join(__dirname, 'public')))
 
@@ -36,16 +35,16 @@ app.use('/', express.static(path.join(__dirname, 'public')))
 app.use('/api/v1/users', require('./src/routes/userRoute.js'));
 app.use('/api/v1/events', require('./src/routes/eventRoute.js'));
 app.use("/api/v1/tickets", require("./src/routes/ticketRoute.js"));
-// app.use("/api/v1/orders", require("./src/routes/orderRoute.js"));
+app.use("/api/v1/orders", require("./src/routes/orderRoute.js"));
 // app.use("/api/v1/mpesa", require("./src/routes/mpesaRoute.js"));
 app.use("/",(req,res)=>{
     res.status(200)
     if (req.accepts('html')) {
         res.sendFile(path.join(__dirname, './src/views', 'index.html'))
     } else if (req.accepts('json')) {
-        res.json({ message: 'Nyagaka Ecommerce API' });
+        res.json({ message: 'VAIBU API' });
     } else {
-        res.type('txt').send('Nyagaka Ecommerce API');
+        res.type('txt').send('VAIBU API');
     }
     return
 });

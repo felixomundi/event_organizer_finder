@@ -1,19 +1,12 @@
 "use strict";
-const { User, Cart, OrderItems, Order, Product } = require('./../database/models');
+const { User, Ticket, OrderItems, Order,Event  } = require('./../database/models');
 const crypto = require("crypto");
-const createOrder = async (req, res) => {
-    try {
-        const user = await User.findOne({
-            where:{id:req.user.id}
-        })
-        if (!user) {
-            return res.status(401).json({
-                message:"Unauthenticated"
-            })
-        }
-        const userId = user.id;
+async function createOrder(req, res){
+    try {      
 
-        const cart = await Cart.findOne({
+        const userId = req.user.id;
+
+        const cart = await Ticket.findOne({
             where: {
                 userId
             }
@@ -25,34 +18,28 @@ const createOrder = async (req, res) => {
         })
         }
 
-        const cartItems = await Cart.findAll({
+        const cartItems = await Ticket.findAll({
             where: {
                 userId
             }
         })
-        const { shipcode, address, payment_mode, total, coupon_code,discount, discounted_total } = (req.body);
+        const {  payment_mode, total} = (req.body);
         let tracking_no = crypto.randomUUID();
-        let order = await Order.create({
-            shipcode,
-            address,
+        const order = await Order.create({           
             payment_mode,
-            total,
-            coupon_code,
+            total,            
             status: "Order Created",
             userId,
-            tracking_no,
-            discount,
-            discounted_total,
+            tracking_no,            
         });
 
-        order = order.id; 
+        const orderId = await order.id; 
         cartItems.forEach(item => {            
-            let product = item.productId
+            let eventId = item.eventId
             let quantity = item.quantity           
-             createOrderItems(product, quantity, order);    
+             createOrderItems(eventId, quantity, orderId);    
         });
-        
-        await Cart.destroy({
+        await Ticket.destroy({
             where: {
                 userId
             }
@@ -60,13 +47,11 @@ const createOrder = async (req, res) => {
 
         //send email
     
-        return res.status(200).json({           
+        return res.status(201).json({           
             message: "Order created successfully",             
-        })     
+        })    
         
-        
-    } catch (error) {
-    
+    } catch (error) {    
         if (error) {
             return res.status(500).json({
                 message:"Something went wrong in creating order"
@@ -74,10 +59,9 @@ const createOrder = async (req, res) => {
         }
     }
 }
-async function createOrderItems(product, quantity, order) {
-   await OrderItems.bulkCreate([{productId:product, quantity, orderId:order}]);
+async function createOrderItems(eventId, quantity, orderId) {
+   await OrderItems.bulkCreate([{eventId, quantity, orderId}]);
 }
-
 async function userOrders(req,res) {
     try {
         const orders = await Order.findAll({
@@ -88,8 +72,8 @@ async function userOrders(req,res) {
                 model: OrderItems,
                 attributes:["quantity"],
                 include: [ {
-                    model: Product,
-                    attributes:["name"]
+                    model: Event,
+                    attributes:["event_name","entry_fee", "image"]
                 },],
             }],
         })
@@ -98,12 +82,12 @@ async function userOrders(req,res) {
         })
         
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             message:"Failed to fetch orders"
         })
     }
 }
-
 async function getOrder(req, res) {    
     try {
         // const id = req.body.orderId;
@@ -123,8 +107,8 @@ async function getOrder(req, res) {
                     model: OrderItems,
                     attributes:["quantity"],
                     include: [{
-                        model: Product,
-                        attributes:["name", "image", "price" ],
+                        model: Event,
+                        attributes:["event_name", "image", "entry_fee" ],
                     }],                    
                 },
                 {
@@ -135,7 +119,7 @@ async function getOrder(req, res) {
             ],
         })
         if (!order) {
-            return res.status(404).json({
+            return res.status(400).json({
                 message:"Order Not Found"
              }) 
         }
@@ -148,75 +132,75 @@ async function getOrder(req, res) {
         })
     }
 }
-async function adminOrders(req,res) {
-    try {
-        const orders = await Order.findAll({           
-            include: [{
-                model: OrderItems,
-                attributes:["quantity"],
-                include: [ {
-                    model: Product,
-                    attributes:["name","price", "image"]
-                },],
-            },
-                {
-                    model: User,
-                attributes:["name"]},
-            ],
-        })
-        return res.status(200).json({
-            orders
-        })
+// async function adminOrders(req,res) {
+//     try {
+//         const orders = await Order.findAll({           
+//             include: [{
+//                 model: OrderItems,
+//                 attributes:["quantity"],
+//                 include: [ {
+//                     model: Product,
+//                     attributes:["name","price", "image"]
+//                 },],
+//             },
+//                 {
+//                     model: User,
+//                 attributes:["name"]},
+//             ],
+//         })
+//         return res.status(200).json({
+//             orders
+//         })
         
-    } catch (error) {
-        return res.status(500).json({
-            message: "Failed to fetch orders"
-        })
-    }
-}
-async function adminOrderDetail(req, res) {
-    try {
-        // const id = req.body.orderId;
-        let id = req.params.id;        
-        const order = await Order.findOne({
-            where: {
-                tracking_no:id,
-            },
-            include: [
+//     } catch (error) {
+//         return res.status(500).json({
+//             message: "Failed to fetch orders"
+//         })
+//     }
+// }
+// async function adminOrderDetail(req, res) {
+//     try {
+//         // const id = req.body.orderId;
+//         let id = req.params.id;        
+//         const order = await Order.findOne({
+//             where: {
+//                 tracking_no:id,
+//             },
+//             include: [
                 
-                {
-                    model: OrderItems,
-                    attributes:["quantity"],
-                    include: [{
-                        model: Product,
-                        attributes:["name", "image", "price" ],
-                    }],                    
-                },
-                {
-                    model: User,
-                    attributes:["name"],
-                },
+//                 {
+//                     model: OrderItems,
+//                     attributes:["quantity"],
+//                     include: [{
+//                         model: Product,
+//                         attributes:["name", "image", "price" ],
+//                     }],                    
+//                 },
+//                 {
+//                     model: User,
+//                     attributes:["name"],
+//                 },
                 
-            ],
-        })
-        if (!order) {
-            return res.status(404).json({
-                message:"Order Not Found"
-             }) 
-        }
-        return res.status(200).json({
-           order
-        })
-    } catch (error) {    
-        return res.status(500).json({
-            message:"Failed to fetch order"
-        })
-    }
-}
+//             ],
+//         })
+//         if (!order) {
+//             return res.status(404).json({
+//                 message:"Order Not Found"
+//              }) 
+//         }
+//         return res.status(200).json({
+//            order
+//         })
+//     } catch (error) {    
+//         return res.status(500).json({
+//             message:"Failed to fetch order"
+//         })
+//     }
+// }
 module.exports = {
     createOrder,
     userOrders,
     getOrder,
-    adminOrders, 
-    adminOrderDetail,
+    // adminOrders, 
+    // adminOrderDetail,
 }
