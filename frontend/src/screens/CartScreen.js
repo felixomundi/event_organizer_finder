@@ -13,6 +13,7 @@ const  CartScreen = () => {
   const { tickets, isLoading, total, message } = useSelector(state => state.tickets); 
   const { user } = useSelector(state => state.auth);
   const navigation = useNavigation();
+
   useEffect(() => {
     if (user && user.email) {
       dispatch(getTickets());
@@ -31,7 +32,7 @@ const  CartScreen = () => {
  }
   
   const onPressCheckout = () => {
-    
+
   } 
 
   function handleDeleteCartItem (item){

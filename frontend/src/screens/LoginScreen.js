@@ -11,8 +11,8 @@ function LoginScreen() {
   const dispatch = useDispatch();
 
   const { isLoading, user, message } = useSelector(state => state.auth);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('omundifelix30@gmail.com');
+  const [password, setPassword] = useState('Fo123456');
 
   useEffect(() => {
     if (user && user.email) {
@@ -41,6 +41,7 @@ function LoginScreen() {
       password
     };
     dispatch(login(data));
+    
   };
 
   if (isLoading) {

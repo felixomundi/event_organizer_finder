@@ -6,7 +6,7 @@ import CategoryCard from '../components/CategoryCard';
 import { useDispatch, useSelector } from "react-redux"
 import { getEvents } from '../redux/slices/events';
 import Loader from "../components/Loader"
-import { login, logout } from '../redux/slices/auth';
+import {  logout } from '../redux/slices/auth';
 
 const categories = [
   { id: 1, name: 'Category 1', image:require('../../assets/images/splash.jpg') },

@@ -1,17 +1,15 @@
 "use strict";
+const { Sequelize } = require('sequelize');
 const { User, Ticket, OrderItems, Order,Event  } = require('./../database/models');
 const crypto = require("crypto");
 async function createOrder(req, res){
     try {      
-
         const userId = req.user.id;
-
         const cart = await Ticket.findOne({
             where: {
                 userId
             }
         });
-
         if (!cart) {
              return res.status(400).json({
             message: "Please add items to your cart"
@@ -23,7 +21,8 @@ async function createOrder(req, res){
                 userId
             }
         })
-        const {  payment_mode, total} = (req.body);
+        let total = await orderTotal(req);        
+        const {  payment_mode } = (req.body);
         let tracking_no = crypto.randomUUID();
         const order = await Order.create({           
             payment_mode,
@@ -46,11 +45,32 @@ async function createOrder(req, res){
         })
 
         //send email
-    
-        return res.status(201).json({           
-            message: "Order created successfully",             
-        })    
+
+        const fetchOrder = await Order.findOne({
+            where: { id: order.id, userId },
+            include: [                
+                {
+                    model: OrderItems,
+                    attributes:["quantity"],
+                    include: [{
+                        model: Event,
+                        attributes:["event_name", "image", "entry_fee" ],
+                    }],                    
+                },
+                {
+                    model: User,
+                    attributes:["name"],
+                },
+                
+            ],
+            
+        })
         
+        return res.status(200).json({           
+            message: "Order created successfully",  
+            order:fetchOrder
+        })    
+      
     } catch (error) {    
         if (error) {
             return res.status(500).json({
@@ -81,8 +101,7 @@ async function userOrders(req,res) {
             orders
         })
         
-    } catch (error) {
-        console.log(error);
+    } catch (error) {      
         return res.status(500).json({
             message:"Failed to fetch orders"
         })
@@ -132,6 +151,32 @@ async function getOrder(req, res) {
         })
     }
 }
+async function orderTotal(req) {
+    try {
+        const cart = await Ticket.findAll({
+            where: { userId: req.user.id },
+            attributes: [               
+                [Sequelize.fn("SUM", Sequelize.cast(Sequelize.col("total"), 'integer')),"total"], 
+            ],
+            raw: true,
+        });
+      
+        let total = 0;
+        for (const obj of cart) {
+            const values = Object.values(obj);
+            total = values[0];            
+        }
+        total = Number(total).toFixed(2);
+        return total
+    } catch (error) {
+        
+    }
+    
+} 
+
+
+
+
 // async function adminOrders(req,res) {
 //     try {
 //         const orders = await Order.findAll({           
