@@ -4,14 +4,17 @@ import Loader from './Loader';
 import { logout, reset } from '../redux/slices/auth';
 
 function Auth() {
-const { user, isLoading } = useSelector(state => state.auth);
+const { user, isLoading,message } = useSelector(state => state.auth);
 const dispatch = useDispatch();
   useEffect(() => {
     if (!user.email) {
       dispatch(logout())     
     }
+    if (message) {
+      alert(message)
+    }
     dispatch(reset())
-  }, [user])
+  }, [user,dispatch,message])
   if (isLoading) {
     return <Loader />
   }

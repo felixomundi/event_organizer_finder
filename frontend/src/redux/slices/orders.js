@@ -65,8 +65,8 @@ export const createOrder = createAsyncThunk('orders/createOrder', async (_, thun
         "Authorization": `Bearer ${token}`,
       }
     }    
-    const response = await axios.post(API_URL + 'create',{},config); 
-    return response.data;
+    const response = await axios.post(API_URL + 'create', {}, config); 
+      return response.data;
   } catch (error) {  
     let message;    
     if (error) {
@@ -122,11 +122,11 @@ export const orderSlice = createSlice({
         state.isLoading = true
       })
       .addCase(createOrder.fulfilled, (state, action) => {
-        state.isLoading = false      
-        // state.orders = action.payload.orders
-        state.message = action.payload.message
+        state.isLoading = false
+        state.message = action.payload.message       
         state.order = action.payload.order
-        state.orders = state.orders.push(action.payload.order)
+        isSuccess = true      
+       
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.isLoading = false    

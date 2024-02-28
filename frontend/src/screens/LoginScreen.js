@@ -10,15 +10,16 @@ function LoginScreen() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const { isLoading, user, message } = useSelector(state => state.auth);
+  const { isLoading, user, message} = useSelector(state => state.auth);
   const [email, setEmail] = useState('omundifelix30@gmail.com');
   const [password, setPassword] = useState('Fo123456');
-
+ 
   useEffect(() => {
     if (user && user.email) {
       navigation.navigate("HomePage");
     } else {
       dispatch(logout());
+      
     }
     if (message) {
       alert(message);

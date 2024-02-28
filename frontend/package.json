@@ -28,7 +28,8 @@
     "redux-thunk": "^3.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.4"
   },
   "private": true
 }

@@ -111,7 +111,7 @@ export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
     await AsyncStorage.removeItem('user');
     await AsyncStorage.removeItem('token');
   } catch (error) {
-    console.log(error);
+   
   }
 })
 

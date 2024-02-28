@@ -14,29 +14,33 @@ const  CartScreen = () => {
   const { tickets, isLoading, total, message } = useSelector(state => state.tickets); 
   const { user } = useSelector(state => state.auth);
   const navigation = useNavigation();
-  const { message:orders_message, isLoading:orders_isLoading } = useSelector(state => state.orders);
-  useEffect(() => {   
-      dispatch(getTickets());
-      dispatch(cartTotal());  
-      if (message) {
-        alert(message)
-      }
-    dispatch(resetTicket())
-  }, [ message, dispatch]);
+  const {orders} = useSelector(state => state.orders);
+
   useEffect(() => {
-    if (orders_message) {
-     alert(orders_message)
+    if (user && user.email) {
+      dispatch(getTickets());
+      dispatch(cartTotal());
+    } else {
+      dispatch(logout())
+    }
+    if (message) {
+      alert(message)
+    }
+    dispatch(resetTicket())
+  }, [user, message, dispatch]);
+  useEffect(() => {
+    if (orders.message) {
+     alert(orders.message)
     }  
     dispatch(resetOrderStore())
-  }, [orders_message,dispatch]);
+  }, [orders.message,dispatch]);
   
   () => {
     <Auth/>
  }
   
-  const onPressCheckout = async() => {
-   await dispatch(createOrder());
-   await dispatch(getTickets());
+  const onPressCheckout = () => {
+    dispatch(createOrder());
   } 
 
   function handleDeleteCartItem (item){
@@ -83,7 +87,7 @@ const  CartScreen = () => {
   if (isLoading) {
     return <Loader />
   }
-  if (orders_isLoading) {
+  if (orders.isLoading) {
     return <Loader />
   }
 

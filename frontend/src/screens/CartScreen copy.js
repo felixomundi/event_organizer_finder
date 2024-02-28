@@ -12,31 +12,28 @@ import { createOrder, resetOrderStore } from '../redux/slices/orders';
 const  CartScreen = () => {
   const dispatch = useDispatch();
   const { tickets, isLoading, total, message } = useSelector(state => state.tickets); 
-  const { user } = useSelector(state => state.auth);
+  // const { user } = useSelector(state => state.auth);
   const navigation = useNavigation();
-  const { message:orders_message, isLoading:orders_isLoading } = useSelector(state => state.orders);
-  useEffect(() => {   
+  const { orders } = useSelector(state => state.orders); 
+  // const Loading = useSelector(state => state.orders.isLoading);
+  // const success = useSelector(state => state.orders.isSuccess);
+  // const om = useSelector(state => state.orders.message);
+
+  <Auth />
+  
+  useEffect(() => {    
       dispatch(getTickets());
-      dispatch(cartTotal());  
-      if (message) {
-        alert(message)
-      }
-    dispatch(resetTicket())
-  }, [ message, dispatch]);
-  useEffect(() => {
-    if (orders_message) {
-     alert(orders_message)
-    }  
-    dispatch(resetOrderStore())
-  }, [orders_message,dispatch]);
+      dispatch(cartTotal());    
+      dispatch(resetTicket())
+  }, [dispatch]);
+
+//   () => {
+//     <Auth/>
+//  }
   
-  () => {
-    <Auth/>
- }
-  
-  const onPressCheckout = async() => {
-   await dispatch(createOrder());
-   await dispatch(getTickets());
+  const onPressCheckout = () => {
+    dispatch(createOrder());
+    dispatch(getTickets());
   } 
 
   function handleDeleteCartItem (item){
@@ -83,9 +80,9 @@ const  CartScreen = () => {
   if (isLoading) {
     return <Loader />
   }
-  if (orders_isLoading) {
-    return <Loader />
-  }
+  // if (Loading) {
+  //   return <Loader />
+  // }
 
   return (
     <View style={styles.container}>
