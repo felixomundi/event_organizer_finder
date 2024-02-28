@@ -14,7 +14,8 @@ const  CartScreen = () => {
   const { tickets, isLoading, total, message } = useSelector(state => state.tickets); 
   const { user } = useSelector(state => state.auth);
   const navigation = useNavigation();
-  const { message:orders_message, isLoading:orders_isLoading } = useSelector(state => state.orders);
+  const { message: orders_message, isLoading: orders_isLoading } = useSelector(state => state.orders);
+  <Auth/>
   useEffect(() => {   
       dispatch(getTickets());
       dispatch(cartTotal());  
@@ -29,11 +30,7 @@ const  CartScreen = () => {
     }  
     dispatch(resetOrderStore())
   }, [orders_message,dispatch]);
-  
-  () => {
-    <Auth/>
- }
-  
+    
   const onPressCheckout = async() => {
    await dispatch(createOrder());
    await dispatch(getTickets());
@@ -80,13 +77,9 @@ const  CartScreen = () => {
       },
     ]);
   }
-  if (isLoading) {
+  if (isLoading || orders_isLoading) {
     return <Loader />
   }
-  if (orders_isLoading) {
-    return <Loader />
-  }
-
   return (
     <View style={styles.container}>
       {!isLoading && tickets.length === 0 ? (
