@@ -6,12 +6,14 @@ import {logout} from "../redux/slices/auth"
 import Auth from '../components/Auth';
 import { addTicketToCart, resetTicket } from '../redux/slices/ticket';
 import Loader from '../components/Loader';
+import Map from '../components/Map';
 const EventDetail = ({ route }) => {
   const { event } = route.params;
   const { user } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const { isLoading, message, isError } = useSelector(state => state.tickets);
- 
+  const eventLatitude = 37.78825; // Example latitude
+  const eventLongitude = -122.4324; // Example longitude
   useEffect(() => {
     if (message) {
       Alert.alert(message);
@@ -37,9 +39,10 @@ const EventDetail = ({ route }) => {
       <Image source={{ uri: image_url(event) }} style={styles.productImage} />
       <View style={{flexDirection:'row'}}><Text style={styles.text}>Location: { event.location} </Text></View>
       <Text style={styles.productName}>Event Name: {event.event_name} </Text>
-      <Text style={styles.productPrice}>Entry Fee: Ksh. {event.entry_fee}</Text>
+      <Text style={styles.productPrice}>Ticket Fee: Ksh. {event.entry_fee}</Text>
       <Text style={styles.productDescription}>{event.details}</Text>
       <Button title="Book Event" style={styles.add_to_cart_button} onPress={handleAddToCart} />
+      <Map latitude={eventLatitude} longitude={eventLongitude} />
     </View>
   );
 };

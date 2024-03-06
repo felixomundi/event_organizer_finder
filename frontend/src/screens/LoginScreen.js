@@ -53,11 +53,12 @@ function LoginScreen() {
     container: {
       flex: 1,
       padding: 30,
+      backgroundColor:'#FFA500',
     },
     title: {
       fontSize: 20,
       fontWeight: "500",
-      color: "red"
+      color: "#fff"
     },
     form: {
       flex: 1,
@@ -144,7 +145,9 @@ function LoginScreen() {
           </View>
           <TouchableOpacity onPress={() => navigation.navigate("RegisterScreen")} style={{ marginTop: 'auto' }}>
             <Text style={styles.form_footer}>
-              Don't have an account? <Text style={{ textDecorationLine: 'underline' }}>Sign Up</Text>
+              Don't have an account? <Text style={{
+                textDecorationLine: 'underline',
+            color:'red',  }}>Sign Up</Text>
             </Text>
           </TouchableOpacity>
         </View>

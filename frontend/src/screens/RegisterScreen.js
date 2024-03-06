@@ -114,6 +114,7 @@ export default RegisterScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'#FFA500'
   },
   content: {
     flex: 1,
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "500",
-    color: "red",
+    color: "white",
     marginBottom: 30,
     textAlign: 'center',
   },
@@ -168,5 +169,6 @@ const styles = StyleSheet.create({
   },
   signin_text: {
     textDecorationLine: 'underline',
+    color:'red',
   },
 });

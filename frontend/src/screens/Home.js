@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   app: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'green',
+    color: '#FFA500',
     letterSpacing:1,
   },
   welcome:{
