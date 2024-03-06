@@ -63,6 +63,11 @@ const Account = ({ navigation }) => {
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
         <Text style={styles.buttonText}>Save</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+        <Text style={styles.buttonText}>View Orders</Text>
+      </TouchableOpacity>
+
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>

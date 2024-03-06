@@ -93,7 +93,7 @@ async function userOrders(req,res) {
                 attributes:["quantity"],
                 include: [ {
                     model: Event,
-                    attributes:["event_name","entry_fee", "image"]
+                    attributes:["event_name", "entry_fee", "image"]
                 },],
             }],
         })

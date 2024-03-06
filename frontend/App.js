@@ -13,6 +13,10 @@ import EventDetail from './src/screens/EventDetail';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import CartScreen from './src/screens/CartScreen';
+import Orders from './src/screens/Orders';
+import OD from "./src/screens/OD"
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -29,6 +33,21 @@ function HomeStack(){
     </Stack.Navigator>
   );
 }
+
+function OrdersStack() {
+  return ( 
+
+    <Stack.Navigator>
+     <Stack.Screen name="Orders" component={Orders} options={{ headerShown: false }} />       
+      <Stack.Screen name="OD" component={OD} options={({route})=>({
+        headerShown: true,
+        // headerTitle: route?.params?.event?.event_name ? route?.params?.event?.event_name : 'EventDetail'
+      }
+      )} /></Stack.Navigator>
+  
+  );
+}
+
 
 function getTabVisibility (route) {
   const routeName = getFocusedRouteNameFromRoute(route) ?? 'HomePage';   
@@ -83,19 +102,35 @@ function MainTabNavigator() {
         })}
       />    
       <Tab.Screen
-        name="Account"
-        component={Account}      
+        name="OrdersPage"
+        component={Orders}      
         options={({route})=>({
           headerShown: true,
-          headerTitle: "Account Page",        
+          headerTitle: "Orders Page",        
           tabBarIcon: ({ color, size }) => (
-            <Feather name='user' color={color} size={size} />
+            <Icon name="local-shipping" size={size} color={color} />
           ),
           tabBarStyle: {
             display: getTabVisibility(route),
             backgroundColor: "black"
           }
         })}
+      />
+
+        <Tab.Screen
+            name="Account"
+            component={Account}      
+            options={({route})=>({
+            headerShown: true,
+            headerTitle: "Account Page",        
+            tabBarIcon: ({ color, size }) => (
+              <Feather name='user' color={color} size={size} />
+            ),
+            tabBarStyle: {
+              display: getTabVisibility(route),
+              backgroundColor: "black"
+            }
+          })}
       />
     </Tab.Navigator>
   );

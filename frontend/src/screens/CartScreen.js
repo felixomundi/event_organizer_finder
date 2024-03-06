@@ -103,7 +103,7 @@ const  CartScreen = () => {
             <View style={styles.itemDetails}>
               <Text style={styles.itemName}>Event Name : {item.Event.event_name}</Text>
               <Text style={styles.itemName}>Event Venue : {item.Event.location}</Text>
-              <Text style={styles.itemPrice}>Entry Fee: Ksh.{item.Event.entry_fee}</Text>
+              <Text style={styles.itemPrice}>Ticket Fee: Ksh.{item.Event.entry_fee}</Text>
             </View>
             <TouchableOpacity
               style={styles.removeButton}
