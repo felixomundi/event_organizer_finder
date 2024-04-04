@@ -29,9 +29,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: true })); 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use('/', express.static(path.join(__dirname, 'public')))
-
-// app.use('/api/v1/products', require('./src/routes/productRoute.js'));
+app.use('/', express.static(path.join(__dirname, 'public')));
 app.use('/api/v1/users', require('./src/routes/userRoute.js'));
 app.use('/api/v1/events', require('./src/routes/eventRoute.js'));
 app.use("/api/v1/tickets", require("./src/routes/ticketRoute.js"));
@@ -65,7 +63,6 @@ app.all('*', (req, res) => {
 app.listen(
    PORT,
     () => {
-        console.log(`Server running on http://${HOSTNAME}:${PORT}/`);
-        
+        console.log(`Server running on http://${HOSTNAME}:${PORT}/`);        
     }
 );

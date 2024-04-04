@@ -36,7 +36,9 @@ const stkPush = async (req, res) => {
             const payment = await Payment.create({
                 CheckoutRequestID,MerchantRequestID,status:'Requested'
             })
-            return res.status(200).json({ CheckoutRequestID, MerchantRequestID, ResponseDescription, payment });
+            return res.status(200).json({
+                CheckoutRequestID, MerchantRequestID, ResponseDescription, payment,            
+            });
         }  
         
    }
@@ -49,50 +51,50 @@ const stkPush = async (req, res) => {
 }
 const callBack = async(req, res) => {    
     try {
-        if (req.body.Body != null) { 
+        console.log(req.body);       
+        // const {
+        //     // MerchantRequestID,
+        //     CheckoutRequestID,
+        //     ResultCode,
+        //     ResultDesc,
+        //     CallbackMetadata
+        // } = req.body.Body.stkCallback;  
+    
 
-        const {
-            // MerchantRequestID,
-            CheckoutRequestID,
-            ResultCode,
-            ResultDesc,
-            CallbackMetadata
-        } = req.body.Body.stkCallback;        
-        const meta = Object.values(await CallbackMetadata.Item);
-        const PhoneNumber = await meta.find(o => o.Name === 'PhoneNumber').Value.toString();
-        // const Amount = await meta.find(o => o.Name === 'Amount').Value.toString();
-        const MpesaReceiptNumber = await meta.find(o => o.Name === 'MpesaReceiptNumber').Value.toString();
-        // const TransactionDate = await meta.find(o => o.Name === 'TransactionDate').Value.toString();                  
-        const payment = await Payment.findOne({ where: { CheckoutRequestID } });
-        if (!payment) { }
-        else {
-            if (ResultCode === 0) {                
-                await payment.update({
-                    phone_number: PhoneNumber,
-                    ResultDesc,
-                    MpesaReceiptNumber,
-                    status:'Paid'
-                });
-                console.log("Success Payment:", payment);
-            } else if(ResultCode === "1032") {
-                await payment.update({
-                    phone_number: PhoneNumber,
-                    ResultDesc:ResultDesc,
-                    MpesaReceiptNumber:MpesaReceiptNumber,
-                    status:'Failed'
-                });
-                console.log("Failed Payment:",payment);
-            }
-        }            
+        // const meta = Object.values(await CallbackMetadata.Item);
+        // const PhoneNumber = await meta.find(o => o.Name === 'PhoneNumber').Value.toString();
+        // // const Amount = await meta.find(o => o.Name === 'Amount').Value.toString();
+        // const MpesaReceiptNumber = await meta.find(o => o.Name === 'MpesaReceiptNumber').Value.toString();
+        // // const TransactionDate = await meta.find(o => o.Name === 'TransactionDate').Value.toString();                  
+        // const payment = await Payment.findOne({ where: { CheckoutRequestID } });
+        // if (!payment) { }
+        // else {
+        //     if (ResultCode === 0) {                
+        //         await payment.update({
+        //             phone_number: PhoneNumber,
+        //             ResultDesc,
+        //             MpesaReceiptNumber,
+        //             status:'Paid'
+        //         });
+        //         console.log("Success Payment:", payment);
+        //     } else if(ResultCode === "1032") {
+        //         await payment.update({
+        //             phone_number: PhoneNumber,
+        //             ResultDesc:ResultDesc,
+        //             MpesaReceiptNumber:MpesaReceiptNumber,
+        //             status:'Failed'
+        //         });
+        //         console.log("Failed Payment:",payment);
+        //     }
+        // }           
 
-        } else {    }
             
     } catch (error) {
         return res.status(500).json(error.message);
     }
 }
 const stkPushStatus = async(req, res)=>{
-    try {
+    try {        
         const CheckoutRequestID = req.body.CheckoutRequestID
         if(!CheckoutRequestID){
             return res.status(400).json({

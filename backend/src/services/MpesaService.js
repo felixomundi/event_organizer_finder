@@ -20,7 +20,8 @@ class MpesaService {
             "PartyA": `254${phone}`,
             "PartyB": SHORTCODE,
             "PhoneNumber": `254${phone}`,
-            "CallBackURL": CALLBACK_URL,
+            // "CallBackURL": CALLBACK_URL,
+            "CallBackURL": "https://b39d-41-222-13-182.ngrok-free.app/api/v1/payments/callback",
             "AccountReference": `254${phone}`,
             "TransactionDesc": "Testing mpesa simulation"
         }
