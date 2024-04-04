@@ -8,9 +8,10 @@ import { getEvents } from '../redux/slices/events';
 import Loader from "../components/Loader"
 import {  logout } from '../redux/slices/auth';
 
+
 const categories = [
-  { id: 1, name: 'Category 1', image:require('../../assets/images/splash.jpg') },
-  { id: 2, name: 'Category 2', image:require('../../assets/images/splash.jpg') },
+  { id: 1, name: 'Category 1', image:require('../../assets/logo.png') },
+  { id: 2, name: 'Category 2', image:require('../../assets/cart.png') },
  
 ];
 
