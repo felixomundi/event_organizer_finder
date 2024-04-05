@@ -12,8 +12,8 @@ const EventDetail = ({ route }) => {
   const { user } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const { isLoading, message, isError } = useSelector(state => state.tickets);
-  const eventLatitude = 37.78825; // Example latitude
-  const eventLongitude = -122.4324; // Example longitude
+  const eventLatitude = -3.633700; // Example latitude
+  const eventLongitude = 39.849850; // Example longitude
   useEffect(() => {
     if (message) {
       Alert.alert(message);

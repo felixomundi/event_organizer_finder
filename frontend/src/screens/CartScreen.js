@@ -1,4 +1,3 @@
-"use strict"
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Button, Alert } from 'react-native';
 import Auth from "../components/Auth";
@@ -9,34 +8,36 @@ import Loader from '../components/Loader';
 import { image_url } from '../utils';
 import { useNavigation } from "@react-navigation/native"
 import { createOrder, resetOrderStore } from '../redux/slices/orders';
-const  CartScreen = () => {
+
+const CartScreen = () => {
   const dispatch = useDispatch();
   const { tickets, isLoading, total, message } = useSelector(state => state.tickets); 
   const { user } = useSelector(state => state.auth);
   const navigation = useNavigation();
   const { message: orders_message, isLoading: orders_isLoading } = useSelector(state => state.orders);
-  <Auth/>
+
   useEffect(() => {   
-      dispatch(getTickets());
-      dispatch(cartTotal());  
-      if (message) {
-        alert(message)
-      }
-    dispatch(resetTicket())
-  }, [ message, dispatch]);
+    dispatch(getTickets());
+    dispatch(cartTotal());  
+    if (message) {
+      Alert.alert("Message", message);
+    }
+    dispatch(resetTicket());
+  }, [message, dispatch]);
+
   useEffect(() => {
     if (orders_message) {
-     alert(orders_message)
-    }  
-    dispatch(resetOrderStore())
-  }, [orders_message,dispatch]);
+      Alert.alert("Order Message", orders_message);
+    }
+    dispatch(resetOrderStore());
+  }, [orders_message, dispatch]);
     
   const onPressCheckout = async() => {
-   await dispatch(createOrder());
-   await dispatch(getTickets());
+    await dispatch(createOrder());
+    await dispatch(getTickets());
   } 
 
-  function handleDeleteCartItem (item){
+  function handleDeleteCartItem(item) {
     Alert.alert('Clear Cart', 'Are you sure you want to delete this cart item?', [
       {
         text: 'Cancel',
@@ -51,12 +52,13 @@ const  CartScreen = () => {
             dispatch(cartTotal());
           } else {
             dispatch(logout())
-         }  
+          }  
         },
         style: 'destructive',
       },
     ]);
   }
+
   function handleClearCart() {
     Alert.alert('Clear Cart', 'Are you sure you want to clear your cart', [
       {
@@ -77,55 +79,51 @@ const  CartScreen = () => {
       },
     ]);
   }
+
   if (isLoading || orders_isLoading) {
-    return <Loader />
+    return <Loader />;
   }
+
   return (
     <View style={styles.container}>
       {!isLoading && tickets.length === 0 ? (
         <View>
-          <Text style={{
-            fontSize: 20,
-            color:'red'
-          }}>Empty Cart</Text>
-          <TouchableOpacity onPress={() => {
-            navigation.navigate("HomePage")
-           }} style={[styles.button]}>
-             <Text style={[styles.text]}>Book New Ticket</Text>
+          <Text style={styles.emptyCartText}>Your Cart is Empty</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("HomePage")} style={styles.browseEventsButton}>
+            <Text style={styles.buttonText}>Browse Events</Text>
           </TouchableOpacity>
         </View>
       ) : (
-      <>
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        {tickets.map((item, index) => (
-          <View key={index} style={styles.itemContainer}>
-            <Image source={ {uri:image_url(item.Event)} } style={styles.image} />
-            <View style={styles.itemDetails}>
-              <Text style={styles.itemName}>Event Name : {item.Event.event_name}</Text>
-              <Text style={styles.itemName}>Event Venue : {item.Event.location}</Text>
-              <Text style={styles.itemPrice}>Ticket Fee: Ksh.{item.Event.entry_fee}</Text>
-            </View>
-            <TouchableOpacity
-              style={styles.removeButton}
-              onPress={() => handleDeleteCartItem(item.id)}>
-              <Text style={styles.removeButtonText}>Remove</Text>           
-            </TouchableOpacity>
-          </View>
-        ))}
-          </ScrollView>    
+        <>
+          <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            {tickets.map((item, index) => (
+              <View key={index} style={styles.itemContainer}>
+                <Image source={{ uri: image_url(item.Event) }} style={styles.image} />
+                <View style={styles.itemDetails}>
+                  <Text style={styles.itemName}>Event: {item.Event.event_name}</Text>
+                  <Text style={styles.itemVenue}>Venue: {item.Event.location}</Text>
+                  <Text style={styles.itemPrice}>Price: Ksh. {item.Event.entry_fee}</Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.removeButton}
+                  onPress={() => handleDeleteCartItem(item.id)}>
+                  <Text style={styles.removeButtonText}>Remove</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </ScrollView>
           <View>
-            <Text style={{ backgroundColor: "yellow", fontSize: 20, padding: 10 }}>Total Items {tickets?.length }</Text>
+            <Text style={styles.totalItemsText}>Total Items: {tickets?.length }</Text>
           </View>
-       <View style={styles.totalContainer}>
-            <Text>Total: Ksh. {total}</Text>
-            <TouchableOpacity onPress={() => {
-              handleClearCart()
-            }}
-            style={styles.btn_danger}><Text style={styles.btn_text}>Clear Cart</Text></TouchableOpacity>
-        <Button title="Checkout" style={styles.checkout_button} onPress={onPressCheckout} />
-        </View>
-      </>)}
-
+          <View style={styles.totalContainer}>
+            <Text style={styles.totalText}>Total: Ksh. {total}</Text>
+            <TouchableOpacity onPress={handleClearCart} style={styles.clearCartButton}>
+              <Text style={styles.clearCartButtonText}>Clear Cart</Text>
+            </TouchableOpacity>
+            <Button title="Checkout" onPress={onPressCheckout} />
+          </View>
+        </>
+      )}
     </View>
   );
 };
@@ -133,11 +131,28 @@ const  CartScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000', // Set background color to black
     padding: 16,
   },
+  emptyCartText: {
+    fontSize: 20,
+    color: '#fff',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  browseEventsButton: {
+    backgroundColor: 'blue',
+    padding: 14,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
   scrollViewContent: {
-    paddingBottom: 80, 
+    paddingBottom: 80,
   },
   itemContainer: {
     flexDirection: 'row',
@@ -147,6 +162,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     borderRadius: 8,
     padding: 10,
+    backgroundColor: '#fff', // Set background color to white
   },
   image: {
     width: 80,
@@ -158,13 +174,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemName: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 4,
+    color: '#000',
+  },
+  itemVenue: {
+    fontSize: 14,
+    color: '#000',
+    marginBottom: 4,
   },
   itemPrice: {
     fontSize: 14,
-    color: '#666',
+    color: '#000',
   },
   removeButton: {
     backgroundColor: '#ff6347',
@@ -176,41 +198,34 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 12,
   },
-    totalContainer: {
+  totalItemsText: {
+    backgroundColor: "yellow",
+    fontSize: 18,
+    padding: 10,
+    textAlign: 'center',
+    color: '#000',
+    marginBottom: 10,
+  },
+  totalContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 20,
   },
-  checkout_button: {
-    backgroundColor: 'green',
-       borderRadius: 8,
+  totalText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
   },
-  btn_danger: {
+  clearCartButton: {
     backgroundColor: 'red',
     padding: 10,
     borderRadius: 5,
   },
-  btn_text: {   
-      color: '#fff',
-      textAlign: 'center',
-      fontWeight: 'bold',
-  
+  clearCartButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
-  button: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginTop:10
-  },
-  text: {
-    color: 'white',
-    fontSize: 16,
-  },
- 
 });
 
-export default CartScreen 
-
-
+export default CartScreen;

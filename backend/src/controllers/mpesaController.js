@@ -49,10 +49,11 @@ const stkPush = async (req, res) => {
           
     };
 }
-const callBack = async(req, res) => {    
+const callBacks = async(req, res) => {    
     try {
         console.log(req.body);       
         // const {
+            
         //     // MerchantRequestID,
         //     CheckoutRequestID,
         //     ResultCode,
@@ -109,6 +110,94 @@ const stkPushStatus = async(req, res)=>{
         }
     }
 
+}
+const callBack = async(req, res) => {    
+    try {
+        console.log(req.body);       
+        // const {
+        //     // MerchantRequestID,
+        //     CheckoutRequestID,
+        //     ResultCode,
+        //     ResultDesc,
+        //     CallbackMetadata
+        // } = req.body.Body.stkCallback;  
+    
+
+        // const meta = Object.values(await CallbackMetadata.Item);
+        // const PhoneNumber = await meta.find(o => o.Name === 'PhoneNumber').Value.toString();
+        // // const Amount = await meta.find(o => o.Name === 'Amount').Value.toString();
+        // const MpesaReceiptNumber = await meta.find(o => o.Name === 'MpesaReceiptNumber').Value.toString();
+        // // const TransactionDate = await meta.find(o => o.Name === 'TransactionDate').Value.toString();                  
+        // const payment = await Payment.findOne({ where: { CheckoutRequestID } });
+        // if (!payment) { }
+        // else {
+        //     if (ResultCode === 0) {                
+        //         await payment.update({
+        //             phone_number: PhoneNumber,
+        //             ResultDesc,
+        //             MpesaReceiptNumber,
+        //             status:'Paid'
+        //         });
+        //         console.log("Success Payment:", payment);
+        //     } else if(ResultCode === "1032") {
+        //         await payment.update({
+        //             phone_number: PhoneNumber,
+        //             ResultDesc:ResultDesc,
+        //             MpesaReceiptNumber:MpesaReceiptNumber,
+        //             status:'Failed'
+        //         });
+        //         console.log("Failed Payment:",payment);
+        //     }
+        // }           
+
+            
+    } catch (error) {
+        return res.status(500).json(error.message);
+    }
+}
+async function callbackStatus(response){
+    let stopTime = new Date().getTime() + 25000;
+    let interval;
+    interval = setInterval(async function () {
+        let now = new Date().getTime();
+        if (now > stopTime) {
+            clearInterval(interval);
+            $.notify("Payment Time Erapsed", "error");
+            $("#submit").attr("disabled", false);
+            $("#submit").html("Update Fee Payment");
+            return
+        }
+        try {
+           let id = response.checkoutID
+           const paymentResponse = await axios.post("/status/"+id);
+           if(paymentResponse.data.errorCode){}
+           else if(paymentResponse.data.ResultCode && paymentResponse.data.ResultCode == 0) {
+                clearInterval(interval)
+                $.notify(paymentResponse.data.ResultDesc, "success");
+                $('#fee_payment_form').trigger('reset');
+                $("#submit").attr("disabled", false);
+                $("#submit").html("Update Fee Payment");
+           }
+           else if (paymentResponse.data.ResultCode && paymentResponse.data.ResultCode != 0) {
+                  clearInterval(interval)
+                  $.notify(paymentResponse.data.ResultDesc, "error");
+                  $('#fee_payment_form').trigger('reset');
+                  $("#submit").attr("disabled", false);
+                  $("#submit").html("Update Fee Payment");
+           }
+          return paymentResponse.data;
+       } catch (error) {
+          if(error.response){
+                if(error.response.status >= 500){
+                  $.notify("Something went wrong", "error");
+                  $("#submit").attr("disabled", false);
+                  $("#submit").html("Update Fee Payment");
+                  clearInterval(interval);                  
+                }
+          }
+          return error;
+       }
+    }, 2000);
 }
 module.exports = {
     generateToken,

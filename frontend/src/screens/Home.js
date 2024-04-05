@@ -58,7 +58,7 @@ const Home = () => {
     }
       
 
-      <Text style={styles.title}>Categories</Text>
+      <Text style={styles.title}>Features Venues</Text>
       <FlatList
         data={categories}
         keyExtractor={(item) => item.id}
