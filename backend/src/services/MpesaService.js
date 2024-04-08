@@ -21,7 +21,7 @@ class MpesaService {
             "PartyB": SHORTCODE,
             "PhoneNumber": `254${phone}`,
             // "CallBackURL": CALLBACK_URL,
-            "CallBackURL": "https://d273-196-202-217-130.ngrok-free.app/api/v1/payments/callback",
+            "CallBackURL": "https://3afb-196-202-217-130.ngrok-free.app/api/v1/payments/callback",
             "AccountReference": `254${phone}`,
             "TransactionDesc": "Testing mpesa simulation"
         }
@@ -43,23 +43,64 @@ class MpesaService {
                     }
                 });    
         return response.data;
-    }
-    static async stkPushStatusService(CheckoutRequestID, req){
-        const url = "https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query";      
-        const response = await axios.post(url,
-            {
-                "BusinessShortCode":SHORTCODE,
-                "Password":PASSWORD,
-                "Timestamp":TIMESTAMP,
-                'CheckoutRequestID':CheckoutRequestID
-            },
-            {
+    }   
+    static async paymentStatus(CheckoutRequestID,req,res) {
+        try {
+            let stopTime = new Date().getTime() + 25000;
+            let interval;
+                interval = setInterval(async function () {
+                let now = new Date().getTime();
+                if (now > stopTime) {
+                    clearInterval(interval);                    
+                    return res.status(200).json({
+                        message:'Payment Time Erapsed'
+                    })
+                }
+                try {
+                const url = "https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query";
+                const paymentResponse = await axios.post(url,
+                {
+                "BusinessShortCode": SHORTCODE,
+                "Password": PASSWORD,
+                "Timestamp": TIMESTAMP,
+                'CheckoutRequestID': CheckoutRequestID
+                },
+                {
                 headers: {
-                    Authorization: `Bearer ${req.token}`,
-                    "Content-Type": "application/json",            }
-            }        
-            );
-        return response.data;
+                Authorization: `Bearer ${req.token}`,
+                "Content-Type": "application/json",
+                }
+                }
+                    );    
+                 
+                   if(await paymentResponse.data.errorCode){}
+                   else if(await paymentResponse.data.ResultCode && await paymentResponse.data.ResultCode == 0) {
+                    clearInterval(interval)
+                    return res.status(200).json({message: await paymentResponse.data.ResultDesc});
+                   }
+                   else if ( await paymentResponse.data.ResultCode && await paymentResponse.data.ResultCode != 0) {
+                    clearInterval(interval)
+                    return res.status(200).json({message:await paymentResponse.data.ResultDesc});
+                        
+                   }
+                  return paymentResponse.data;
+               } catch (error) {
+                //   if(error.response && error.response.status >= 500){
+                //             clearInterval(interval);
+                //             return res.status(400).json({
+                //              message:'Something went wrong'
+                //          });                      
+                                              
+                //   }
+                //   return error;
+               }
+                }, 2000); 
+
+           
+        } catch (error) {
+            
+        }
     }
+   
 }
 module.exports = MpesaService
