@@ -14,10 +14,8 @@ const OrdersList = () => {
   const renderItem = ({ item }) => (
     <View style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
     <Text style={{ fontWeight: 'bold' }}>Order ID: {item.id}</Text>
-      <Text>Ordered Date: {  formatDate(item.createdAt)    }</Text>
-    {/* <Text>Product: {item.product}</Text>
-    <Text>Quantity: {item.quantity}</Text> */}
-    <Text>Tickets Total: Ksh. {item.total}</Text>
+      <Text>Ordered Date: {  formatDate(item.createdAt)    }</Text> 
+    <Text>Ticket's Total: Ksh. {item.total}</Text>
   </View>
   );
 

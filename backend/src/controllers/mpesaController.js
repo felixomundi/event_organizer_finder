@@ -27,19 +27,14 @@ const stkPush = async (req, res) => {
                 message:"Provide Amount to Pay"
             })
         }   
-        const response = await MpesaService.stkPushService(phone, amount, req);   
-        
+        const response = await MpesaService.stkPushService(phone, amount, req);  
         if(response.ResponseCode == "0"){            
             const CheckoutRequestID = response.CheckoutRequestID;
             const MerchantRequestID = response.MerchantRequestID;
-            const ResponseDescription = response.ResponseDescription;
+            // const ResponseDescription = response.ResponseDescription;
             const payment = await Payment.create({
                 CheckoutRequestID, MerchantRequestID, status: 'Requested'
-            });
-            // return res.status(200).json({
-            //     CheckoutRequestID, MerchantRequestID, ResponseDescription, payment,            
-            // });
-            
+            });         
             const payment_status = await MpesaService.paymentStatus(CheckoutRequestID,req,res);
             return payment_status;
             

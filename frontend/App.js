@@ -16,6 +16,7 @@ import CartScreen from './src/screens/CartScreen';
 import Orders from './src/screens/Orders';
 import OD from "./src/screens/OD"
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import PaymentScreen from './src/screens/PaymentScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -33,6 +34,22 @@ function HomeStack(){
     </Stack.Navigator>
   );
 }
+function PaymentStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="CartScreen" component={CartScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="PaymentScreen"
+        component={PaymentScreen}
+        options={({ route }) => ({
+          headerShown: true,
+          headerTitle: 'Enter Payment Details'
+        })}
+      />
+    </Stack.Navigator>
+  );
+}
+
 
 function OrdersStack() {
   return ( 
@@ -87,20 +104,21 @@ function MainTabNavigator() {
         })}
       />
       <Tab.Screen
-        name="CartScreen"
-        component={CartScreen}      
-        options={({route})=>({
-          headerShown: true,
-          headerTitle: "Cart Page",        
-          tabBarIcon: ({ color, size }) => (
-            <Feather name='shopping-bag' color={color} size={size} />
-          ),
-          tabBarStyle: {
-            display: getTabVisibility(route),
-            backgroundColor: "black"
-          },
-        })}
-      />    
+      name="CartPage"
+      component={PaymentStack}      
+      options={({ route }) => ({
+        headerShown: false,
+        // headerTitle: "Cart Page",        
+        tabBarIcon: ({ color, size }) => (
+          <Feather name='shopping-bag' color={color} size={size} />
+        ),
+        tabBarStyle: {
+          display: getTabVisibility(route),
+          backgroundColor: "black"
+        },
+      })}
+    />
+ 
       <Tab.Screen
         name="OrdersPage"
         component={Orders}      

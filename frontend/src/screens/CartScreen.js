@@ -7,15 +7,13 @@ import { logout } from '../redux/slices/auth';
 import Loader from '../components/Loader';
 import { image_url } from '../utils';
 import { useNavigation } from "@react-navigation/native"
-import { createOrder, resetOrderStore } from '../redux/slices/orders';
 
 const CartScreen = () => {
+  <Auth />
   const dispatch = useDispatch();
   const { tickets, isLoading, total, message } = useSelector(state => state.tickets); 
   const { user } = useSelector(state => state.auth);
-  const navigation = useNavigation();
-  const { message: orders_message, isLoading: orders_isLoading } = useSelector(state => state.orders);
-
+  const navigation = useNavigation();  
   useEffect(() => {   
     dispatch(getTickets());
     dispatch(cartTotal());  
@@ -25,17 +23,6 @@ const CartScreen = () => {
     dispatch(resetTicket());
   }, [message, dispatch]);
 
-  useEffect(() => {
-    if (orders_message) {
-      Alert.alert("Order Message", orders_message);
-    }
-    dispatch(resetOrderStore());
-  }, [orders_message, dispatch]);
-    
-  const onPressCheckout = async() => {
-    await dispatch(createOrder());
-    await dispatch(getTickets());
-  } 
 
   function handleDeleteCartItem(item) {
     Alert.alert('Clear Cart', 'Are you sure you want to delete this cart item?', [
@@ -80,7 +67,7 @@ const CartScreen = () => {
     ]);
   }
 
-  if (isLoading || orders_isLoading) {
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -120,7 +107,7 @@ const CartScreen = () => {
             <TouchableOpacity onPress={handleClearCart} style={styles.clearCartButton}>
               <Text style={styles.clearCartButtonText}>Clear Cart</Text>
             </TouchableOpacity>
-            <Button title="Checkout" onPress={onPressCheckout} />
+            <Button title="Checkout" onPress={()=>navigation.navigate('PaymentScreen')} />
           </View>
         </>
       )}
@@ -131,7 +118,7 @@ const CartScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000', // Set background color to black
+    backgroundColor: '#ccc', // Set background color to black
     padding: 16,
   },
   emptyCartText: {
@@ -215,7 +202,7 @@ const styles = StyleSheet.create({
   totalText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#fff',
+    color: 'black',
   },
   clearCartButton: {
     backgroundColor: 'red',
