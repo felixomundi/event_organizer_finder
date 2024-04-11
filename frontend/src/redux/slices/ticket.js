@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 const URL = process.env.NETWORK_URL;
+
 const API_URL = `${URL}tickets/`
 
 const config = {
@@ -8,8 +9,6 @@ const config = {
     "Content-Type": "application/json"   
   }
 }
-
-
 
 const initialState = { 
   ticket: {} ,

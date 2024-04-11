@@ -10,7 +10,7 @@ const HOSTNAME = "127.0.0.1";
 
 global.__basedir = __dirname;
 
-const whitelist = ['http://localhost:3000'];
+const whitelist = ['http://localhost:3000', '*'];
 
 const corsOptions = {
     origin: (origin, callback) => {

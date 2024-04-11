@@ -9,19 +9,19 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      // orderId: {
-      //   type: Sequelize.INTEGER,
-      //   allowNull: false,
-      //           validate: {
-      //               notEmpty: true,                      
-      //   },
-      //   onDelete:"CASCADE",
-      //   references: {
-      //     model: "Orders",
-      //     key: "id",
-      //     as:"orderId",
-      //           },
-      // },
+      orderId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+                validate: {
+                    notEmpty: true,                      
+        },
+        onDelete:"CASCADE",
+        references: {
+          model: "Orders",
+          key: "id",
+          as:"orderId",
+                },
+      },
       status: {
         type: Sequelize.STRING
       },

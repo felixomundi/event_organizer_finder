@@ -8,9 +8,6 @@ const config = {
     "Content-Type": "application/json"   
   }
 }
-
-
-
 const initialState = { 
   order: {} ,
   orders: [],

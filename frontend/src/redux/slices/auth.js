@@ -86,6 +86,7 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
     }  
     return response.data;
   } catch (error) {    
+    console.log(error);
     let message;
     await AsyncStorage.removeItem('user');
     await AsyncStorage.removeItem('token');

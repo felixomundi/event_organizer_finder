@@ -29,7 +29,7 @@ export const getEvents = createAsyncThunk('events/getEvents', async (_, thunkAPI
     const response = await axios.get(API_URL, config);    
     return response.data;
   } catch (error) {   
-    if (error) {   
+    if (error) {  
       const message = error.response.data.message;
       return thunkAPI.rejectWithValue(message)
     }  

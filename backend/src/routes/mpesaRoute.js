@@ -1,8 +1,12 @@
 const express = require("express");
-const { generateToken, stkPush, callBack, stkPushStatus } = require("./../controllers/mpesaController");
+const { generateToken, stkPush, callBack, stkPushStatus, orderPayment } = require("./../controllers/mpesaController");
 const router = express.Router();
 router.get("/token", generateToken);
 router.post("/stk", generateToken, stkPush);
+router.post("/pay", generateToken, orderPayment);
 router.post("/callback", callBack);
-router.post("/payment_status", generateToken, stkPushStatus);
+// router.post("/payment_status", generateToken, stkPushStatus);
 module.exports = router;
+
+
+

@@ -8,9 +8,9 @@ const PASSWORD = new Buffer.from(SHORTCODE + PASSKEY + TIMESTAMP).toString("base
 const CONSUMER_KEY = process.env.MPESA_CONSUMER_KEY;
 const CONSUMER_SECRET = process.env.MPESA_CONSUMER_SECRET;
 const CALLBACK_URL = process.env.MPESA_CALLBACK_URL;
-
+const { Order, Payment } = require("../database/models");
 class MpesaService {
-    static async stkPushService(phone, amount, req){
+    static async stkPushService(phone, req){
         const data =  { 
             "BusinessShortCode": SHORTCODE,
             "Password": PASSWORD,
@@ -21,7 +21,7 @@ class MpesaService {
             "PartyB": SHORTCODE,
             "PhoneNumber": `254${phone}`,
             // "CallBackURL": CALLBACK_URL,
-            "CallBackURL": "https://3afb-196-202-217-130.ngrok-free.app/api/v1/payments/callback",
+            "CallBackURL": "https://1410-41-222-13-182.ngrok-free.app/api/v1/payments/callback",
             "AccountReference": `254${phone}`,
             "TransactionDesc": "Testing mpesa simulation"
         }
@@ -32,7 +32,7 @@ class MpesaService {
                     "Content-Type": "application/json",            }
             }
             );
-        return  (response.data);
+        return  response.data;
     }
     static async generateTokenService(){
         const auth = new Buffer.from(`${CONSUMER_KEY}:${CONSUMER_SECRET}`).toString("base64");
@@ -44,8 +44,8 @@ class MpesaService {
                 });    
         return response.data;
     }   
-    static async paymentStatus(CheckoutRequestID,req,res) {
-        try {
+    static async paymentStatus(req,res,CheckoutRequestID) {
+        try {          
             let stopTime = new Date().getTime() + 25000;
             let interval;
                 interval = setInterval(async function () {
@@ -65,42 +65,57 @@ class MpesaService {
                 "Timestamp": TIMESTAMP,
                 'CheckoutRequestID': CheckoutRequestID
                 },
-                {
-                headers: {
-                Authorization: `Bearer ${req.token}`,
-                "Content-Type": "application/json",
-                }
-                }
-                    );    
-                 
+                {  headers: {
+                        Authorization: `Bearer ${req.token}`,
+                        "Content-Type": "application/json",
+                    }
+                },
+                );   
                    if(await paymentResponse.data.errorCode){}
                    else if(await paymentResponse.data.ResultCode && await paymentResponse.data.ResultCode == 0) {
-                    clearInterval(interval)
+                       clearInterval(interval);
+                       let payment = await Payment.findOne({ where: { CheckoutRequestID } });
+                        if (payment) {
+                            const orderId = await payment.orderId;
+                            let order = await Order.findOne({ where: { id: orderId } });
+                            if (order) {
+                            await order.update({
+                                    status: 'Paid'
+                                });
+                            }
+                            await payment.update({
+                                status: 'Paid'
+                            });
+                        }
                     return res.status(200).json({message: await paymentResponse.data.ResultDesc});
                    }
                    else if ( await paymentResponse.data.ResultCode && await paymentResponse.data.ResultCode != 0) {
-                    clearInterval(interval)
-                    return res.status(200).json({message:await paymentResponse.data.ResultDesc});
-                        
+                       clearInterval(interval);
+                       let payment = await Payment.findOne({ where: { CheckoutRequestID } });
+                        if (payment) {
+                            const orderId = await payment.orderId;
+                            let order = await Order.findOne({ where: { id: orderId } });
+                            if (order) {
+                            await order.update({
+                                    status: 'Failed'
+                                });
+                            }
+                            await payment.update({
+                                status: 'Failed'
+                            });
+                        }
+                    return res.status(200).json({message:await paymentResponse.data.ResultDesc});                        
                    }
-                  return paymentResponse.data;
-               } catch (error) {
-                //   if(error.response && error.response.status >= 500){
-                //             clearInterval(interval);
-                //             return res.status(400).json({
-                //              message:'Something went wrong'
-                //          });                      
-                                              
-                //   }
-                //   return error;
-               }
-                }, 2000); 
+                  return paymentResponse;
+               } catch (error) {                   
+                
+              }
+                }, 2000);            
 
            
         } catch (error) {
             
         }
-    }
-   
+    }   
 }
 module.exports = MpesaService
