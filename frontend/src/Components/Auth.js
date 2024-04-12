@@ -7,7 +7,7 @@ function Auth() {
 const { user, isLoading,message } = useSelector(state => state.auth);
 const dispatch = useDispatch();
   useEffect(() => {
-    if (!user.email) {
+    if (user && !user.email) {
       dispatch(logout())     
     }
     if (message) {

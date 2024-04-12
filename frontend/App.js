@@ -22,7 +22,7 @@ import PaymentScreen from './src/screens/PaymentScreen';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function HomeStack(){
+function HomeScreen(){
   return (
     <Stack.Navigator>
       <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />       
@@ -34,31 +34,16 @@ function HomeStack(){
     </Stack.Navigator>
   );
 }
-function PaymentStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="CartScreen" component={CartScreen} options={{ headerShown: false }} />
-      <Stack.Screen
-        name="PaymentScreen"
-        component={PaymentScreen}
-        options={({ route }) => ({
-          headerShown: true,
-          headerTitle: 'Enter Payment Details'
-        })}
-      />
-    </Stack.Navigator>
-  );
-}
 
-
-function OrdersStack() {
+function OrdersScreen() {
   return ( 
 
     <Stack.Navigator>
-     <Stack.Screen name="Orders" component={Orders} options={{ headerShown: false }} />       
-      <Stack.Screen name="OD" component={OD} options={({route})=>({
+     <Stack.Screen name="Orders" component={Orders} options={{ headerShown: true, headerTitle:"My Orders" }} />       
+      <Stack.Screen name="PaymentScreen" component={PaymentScreen} options={({route})=>({
         headerShown: true,
-        // headerTitle: route?.params?.event?.event_name ? route?.params?.event?.event_name : 'EventDetail'
+        headerTitle:'Complete Order Payment'
+       
       }
       )} /></Stack.Navigator>
   
@@ -90,8 +75,8 @@ function MainTabNavigator() {
       tabBarActiveTintColor="yellow"
     >    
       <Tab.Screen
-        name="HomePage"
-        component={HomeStack}
+        name="HomeScreen"
+        component={HomeScreen}
         options={({ route }) => ({
           headerShown:false,
           tabBarIcon: ({ color, size }) => (
@@ -104,11 +89,10 @@ function MainTabNavigator() {
         })}
       />
       <Tab.Screen
-      name="CartPage"
-      component={PaymentStack}      
+      name="CartScreen"
+      component={CartScreen}      
       options={({ route }) => ({
-        headerShown: false,
-        // headerTitle: "Cart Page",        
+        headerShown: false,    
         tabBarIcon: ({ color, size }) => (
           <Feather name='shopping-bag' color={color} size={size} />
         ),
@@ -120,11 +104,10 @@ function MainTabNavigator() {
     />
  
       <Tab.Screen
-        name="OrdersPage"
-        component={Orders}      
+        name="OrdersScreen"
+        component={OrdersScreen}      
         options={({route})=>({
-          headerShown: true,
-          headerTitle: "Orders Page",        
+          headerShown: false,       
           tabBarIcon: ({ color, size }) => (
             <Icon name="local-shipping" size={size} color={color} />
           ),

@@ -15,7 +15,6 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
-
 }
 
 
@@ -64,7 +63,7 @@ export const createOrder = createAsyncThunk('orders/createOrder', async (_, thun
     }    
     const response = await axios.post(API_URL + 'create', {}, config); 
       return response.data;
-  } catch (error) {  
+  } catch (error) { 
     let message;    
     if (error) {
       message = error.response.data.message
@@ -80,7 +79,41 @@ export const createOrder = createAsyncThunk('orders/createOrder', async (_, thun
      else if (error.response.status === 500) {
         return thunkAPI.rejectWithValue(message)
       } else {
-        message = "Error in checking out"
+        message = "Error in creating an order"
+        return thunkAPI.rejectWithValue(message)
+      }
+    }      
+  }
+}) 
+export const orderPayment = createAsyncThunk('orders/orderPayment', async (payload, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.token   
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      }
+    }    
+    const data = payload;
+    const response = await axios.post(API_URL + 'pay', data, config); 
+      return response.data;
+  } catch (error) { 
+    let message;    
+    if (error) {
+      message = error.response.data.message
+      if (error.response.status === 404) {        
+        return thunkAPI.rejectWithValue(message)
+      }
+      else if (error.response.status === 400) {
+        return thunkAPI.rejectWithValue(message)
+      }
+     else if (error.response.status === 401) {
+        return thunkAPI.rejectWithValue(message)
+      }
+     else if (error.response.status === 500) {
+        return thunkAPI.rejectWithValue(message)
+      } else {
+        message = "Error in creating an order"
         return thunkAPI.rejectWithValue(message)
       }
     }      
@@ -125,6 +158,17 @@ export const orderSlice = createSlice({
         isSuccess = true             
       })
       .addCase(createOrder.rejected, (state, action) => {
+        state.isLoading = false    
+        state.message = action.payload
+      })    
+      .addCase(orderPayment.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(orderPayment.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.message = action.payload.message                   
+      })
+      .addCase(orderPayment.rejected, (state, action) => {
         state.isLoading = false    
         state.message = action.payload
       })    

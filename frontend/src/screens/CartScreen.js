@@ -7,10 +7,12 @@ import { logout } from '../redux/slices/auth';
 import Loader from '../components/Loader';
 import { image_url } from '../utils';
 import { useNavigation } from "@react-navigation/native"
+import { createOrder } from '../redux/slices/orders';
 
 const CartScreen = () => {
   <Auth />
   const dispatch = useDispatch();
+  const { orders, isLoading:loading,message:orderMessage } = useSelector(state => state.orders);
   const { tickets, isLoading, total, message } = useSelector(state => state.tickets); 
   const { user } = useSelector(state => state.auth);
   const navigation = useNavigation();  
@@ -20,9 +22,11 @@ const CartScreen = () => {
     if (message) {
       Alert.alert("Message", message);
     }
+    if (orderMessage) {
+      Alert.alert("Order Message", orderMessage);
+    }    
     dispatch(resetTicket());
-  }, [message, dispatch]);
-
+  }, [message, dispatch, orderMessage]);
 
   function handleDeleteCartItem(item) {
     Alert.alert('Clear Cart', 'Are you sure you want to delete this cart item?', [
@@ -66,8 +70,15 @@ const CartScreen = () => {
       },
     ]);
   }
-
-  if (isLoading) {
+  async function createYourOrder() {
+    if (user && user.email) {      
+      await dispatch(createOrder());
+      await dispatch(getTickets());  
+    } else {
+      dispatch(logout());
+    }
+}
+  if (isLoading || loading) {
     return <Loader />;
   }
 
@@ -76,7 +87,7 @@ const CartScreen = () => {
       {!isLoading && tickets.length === 0 ? (
         <View>
           <Text style={styles.emptyCartText}>Your Cart is Empty</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("HomePage")} style={styles.browseEventsButton}>
+          <TouchableOpacity onPress={() => navigation.navigate("HomeScreen")} style={styles.browseEventsButton}>
             <Text style={styles.buttonText}>Browse Events</Text>
           </TouchableOpacity>
         </View>
@@ -107,7 +118,10 @@ const CartScreen = () => {
             <TouchableOpacity onPress={handleClearCart} style={styles.clearCartButton}>
               <Text style={styles.clearCartButtonText}>Clear Cart</Text>
             </TouchableOpacity>
-            <Button title="Checkout" onPress={()=>navigation.navigate('PaymentScreen')} />
+              <TouchableOpacity  onPress={createYourOrder} style={styles.checkoutButton}
+              >
+                   <Text style={styles.checkoutText}>Create Order</Text>
+              </TouchableOpacity>
           </View>
         </>
       )}
@@ -123,7 +137,7 @@ const styles = StyleSheet.create({
   },
   emptyCartText: {
     fontSize: 20,
-    color: '#fff',
+    color: 'red',
     marginBottom: 10,
     textAlign: 'center',
   },
@@ -212,6 +226,17 @@ const styles = StyleSheet.create({
   clearCartButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  checkoutButton: {
+    backgroundColor: 'green',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 5,
+  },
+  checkoutText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

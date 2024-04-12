@@ -33,7 +33,7 @@ const Account = ({ navigation }) => {
         text: 'Logout',
         onPress: async() => { 
           dispatch(logout());
-          navigation.navigate('HomePage'); 
+          navigation.navigate('HomeScreen'); 
         },
         style: 'destructive',
       },

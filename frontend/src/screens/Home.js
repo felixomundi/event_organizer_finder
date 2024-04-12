@@ -55,8 +55,7 @@ const Home = () => {
             
       </>
           )
-    }
-      
+    }      
 
       <Text style={styles.title}>Features Venues</Text>
       <FlatList

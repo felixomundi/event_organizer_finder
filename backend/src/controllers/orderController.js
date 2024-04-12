@@ -2,107 +2,11 @@
 const { Sequelize } = require('sequelize');
 const { User, Ticket, OrderItems, Order,Event,Payment  } = require('./../database/models');
 const crypto = require("crypto");
-const { stkPush, generateToken } = require('./mpesaController');
-const MpesaService = require('../services/MpesaService');
-const { Axios } = require('axios');
-// async function createOrder(req, res){
-//     try {
-        
-//         //check if phone number available
-//         const phone = req.body.phone.substring(1);
-//         if(!phone){
-//             return res.status(400).json({
-//                 message:"Provide Mpesa Phone Number"
-//             })
-//         }
-
-//         const userId = req.user.id;
-//         const cart = await Ticket.findOne({
-//             where: {
-//                 userId
-//             }
-//         });
-//         if (!cart) {
-//              return res.status(400).json({
-//             message: "Please add items to your cart"
-//         })
-//         }
-
-
-
-//         const cartItems = await Ticket.findAll({
-//             where: {
-//                 userId
-//             }
-//         })
-//         let total = await orderTotal(req);
-//         const {  payment_mode } = (req.body);
-//         let tracking_no = crypto.randomUUID();
-//         const order = await Order.create({
-//             payment_mode,
-//             total,
-//             status: "Order Created",
-//             userId,
-//             tracking_no,
-//         });
-
-//         const orderId = await order.id;
-//         cartItems.forEach(item => {
-//             let eventId = item.eventId
-//             let quantity = item.quantity
-//              createOrderItems(eventId, quantity, orderId);
-//         });
-//         await Ticket.destroy({
-//             where: {
-//                 userId
-//             }
-//         })
-
-//         //send email
-
-//         const fetchOrder = await Order.findOne({
-//             where: { id: order.id, userId },
-//             include: [
-//                 {
-//                     model: OrderItems,
-//                     attributes:["quantity"],
-//                     include: [{
-//                         model: Event,
-//                         attributes:["event_name", "image", "entry_fee" ],
-//                     }],
-//                 },
-//                 {
-//                     model: User,
-//                     attributes:["name"],
-//                 },
-                
-//             ],
-            
-//         })
-        
-//         return res.status(200).json({
-//             message: "Order created successfully",
-//             order:fetchOrder
-//         })
-      
-//     } catch (error) {
-//         if (error) {
-//             return res.status(500).json({
-//                 message:"Something went wrong in creating order"
-//             })
-//         }
-//     }
-// }
+// const { stkPush, generateToken } = require('./mpesaController');
+// const MpesaService = require('../services/MpesaService');
+// const { Axios } = require('axios');
 async function createOrder(req, res){
-    try {   
-        
-        //check if phone number available
-        let phone = req.body.phone;            
-        if(!phone){
-            return res.status(400).json({
-                message:"Provide Mpesa Phone Number"
-            })
-        }
+    try {           
         const userId = req.user.id;
         const cart = await Ticket.findOne({
             where: {
@@ -118,64 +22,147 @@ async function createOrder(req, res){
             where: {
                 userId
             }
-        });
-        let total = await orderTotal(req);        
-         const {  payment_mode } = (req.body);
+        })
+        let total = await orderTotal(req);
+        const {  payment_mode } = (req.body);
         let tracking_no = crypto.randomUUID();
-        const order = await Order.create({           
+        const order = await Order.create({
             payment_mode,
-            total,            
+            total,
             status: "Order Created",
             userId,
-            tracking_no,            
+            tracking_no,
         });
-        const orderId = await order.id; 
-        phone = phone.substring(1);
-        const paymentResponse = await MpesaService.stkPushService(phone, req);       
-        if(paymentResponse.ResponseCode == "0"){            
-            const CheckoutRequestID = paymentResponse.CheckoutRequestID;
-            const MerchantRequestID = paymentResponse.MerchantRequestID;
-            // const ResponseDescription = paymentResponse.ResponseDescription;
-          const payment =  await Payment.create({
-                CheckoutRequestID, MerchantRequestID, status: 'Requested', orderId
-          });            
+
+        const orderId = await order.id;
+        cartItems.forEach(item => {
+            let eventId = item.eventId
+            let quantity = item.quantity
+             createOrderItems(eventId, quantity, orderId);
+        });
+        await Ticket.destroy({
+            where: {
+                userId
+            }
+        })
+
+        //send email
+        const fetchOrder = await Order.findOne({
+            where: { id: order.id, userId },
+            include: [
+                {
+                    model: OrderItems,
+                    attributes:["quantity"],
+                    include: [{
+                        model: Event,
+                        attributes:["event_name", "image", "entry_fee" ],
+                    }],
+                },
+                {
+                    model: User,
+                    attributes:["name"],
+                },
+                
+            ],
             
-        const payment_status = await MpesaService.paymentStatus(CheckoutRequestID,req,res);
-        return payment_status;   
-
-
-
-
-        // if(await payment_status_Response.data.errorCode){}
-        //         else if(await payment_status_Response.data.ResultCode && await payment_status_Response.data.ResultCode == 0) {
-        //     //success   
-        //     clearInterval(interval);
-        //     cartItems.forEach(item => {
-        //         let eventId = item.eventId; let quantity = item.quantity;
-        //             createOrderItems(eventId, quantity, orderId);
-        //     });
-        //     // clear cart
-        //     await Ticket.destroy({ where: { userId } });
-        //         return res.status(200).json({message: await payment_status_Response.data.ResultDesc});
-        //         }
-        //         else if ( await payment_status_Response.data.ResultCode && await payment_status_Response.data.ResultCode != 0) {
-        //     // failed 
-        //     clearInterval(interval);
-        //     await order.destroy();
-        //         return res.status(200).json({message:await payment_status_Response.data.ResultDesc});                        
-        //         }
-        // return payment_status_Response;            
-        }        
+        })
+        
+        return res.status(200).json({
+            message: "Order created successfully",
+            order:fetchOrder
+        })
       
-    } catch (error) {   
+    } catch (error) {
         if (error) {
             return res.status(500).json({
-                error:error.response,
                 message:"Something went wrong in creating order"
             })
         }
     }
 }
+// async function createOrder(req, res){
+//     try {   
+        
+//         //check if phone number available
+//         let phone = req.body.phone;            
+//         if(!phone){
+//             return res.status(400).json({
+//                 message:"Provide Mpesa Phone Number"
+//             })
+//         }
+//         const userId = req.user.id;
+//         const cart = await Ticket.findOne({
+//             where: {
+//                 userId
+//             }
+//         });
+//         if (!cart) {
+//              return res.status(400).json({
+//             message: "Please add items to your cart"
+//         })
+//         }
+//         const cartItems = await Ticket.findAll({
+//             where: {
+//                 userId
+//             }
+//         });
+//         let total = await orderTotal(req);        
+//          const {  payment_mode } = (req.body);
+//         let tracking_no = crypto.randomUUID();
+//         const order = await Order.create({           
+//             payment_mode,
+//             total,            
+//             status: "Order Created",
+//             userId,
+//             tracking_no,            
+//         });
+//         const orderId = await order.id; 
+//         phone = phone.substring(1);
+//         const paymentResponse = await MpesaService.stkPushService(phone, req);       
+//         if(paymentResponse.ResponseCode == "0"){            
+//             const CheckoutRequestID = paymentResponse.CheckoutRequestID;
+//             const MerchantRequestID = paymentResponse.MerchantRequestID;
+//             // const ResponseDescription = paymentResponse.ResponseDescription;
+//           const payment =  await Payment.create({
+//                 CheckoutRequestID, MerchantRequestID, status: 'Requested', orderId
+//           });            
+            
+//         const payment_status = await MpesaService.paymentStatus(CheckoutRequestID,req,res);
+//         return payment_status;   
+
+
+
+
+//         // if(await payment_status_Response.data.errorCode){}
+//         //         else if(await payment_status_Response.data.ResultCode && await payment_status_Response.data.ResultCode == 0) {
+//         //     //success   
+//         //     clearInterval(interval);
+//         //     cartItems.forEach(item => {
+//         //         let eventId = item.eventId; let quantity = item.quantity;
+//         //             createOrderItems(eventId, quantity, orderId);
+//         //     });
+//         //     // clear cart
+//         //     await Ticket.destroy({ where: { userId } });
+//         //         return res.status(200).json({message: await payment_status_Response.data.ResultDesc});
+//         //         }
+//         //         else if ( await payment_status_Response.data.ResultCode && await payment_status_Response.data.ResultCode != 0) {
+//         //     // failed 
+//         //     clearInterval(interval);
+//         //     await order.destroy();
+//         //         return res.status(200).json({message:await payment_status_Response.data.ResultDesc});                        
+//         //         }
+//         // return payment_status_Response;            
+//         }        
+      
+//     } catch (error) {   
+//         if (error) {
+//             return res.status(500).json({
+//                 error:error.response,
+//                 message:"Something went wrong in creating order"
+//             })
+//         }
+//     }
+// }
 async function createOrderItems(eventId, quantity, orderId) {
    await OrderItems.bulkCreate([{eventId, quantity, orderId}]);
 }

@@ -10,7 +10,7 @@
     "frontend": "npm start --prefix ../frontend",
     "dev": "concurrently \"npm run server\" \"npm run frontend\""
   },
-  "author": "omundifelix30@gmail.com",
+  "author": "",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^7.6.0",

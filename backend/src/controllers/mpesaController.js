@@ -108,8 +108,7 @@ async function orderPayment(req,res) {
         const CheckoutRequestID = paymentResponse.CheckoutRequestID;
         const MerchantRequestID = paymentResponse.MerchantRequestID;
         // const ResponseDescription = paymentResponse.ResponseDescription;
-        const payment =
-            await Payment.create({
+        await Payment.create({
             CheckoutRequestID, MerchantRequestID, status: 'Requested', orderId:orderId
         });  
         const payment_status = await MpesaService.paymentStatus(req,res,CheckoutRequestID);
