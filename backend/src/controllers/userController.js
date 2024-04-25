@@ -2,7 +2,6 @@
 const jwt = require('jsonwebtoken');
 const {User} = require('./../database/models');
 const Token = {};
-const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
@@ -231,7 +230,7 @@ const changePassword = async (req, res) => {
  }
 };
 
-const forgotPassword = asyncHandler(async (req, res) => {
+const forgotPassword = async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ where:{
     email:email,
@@ -300,8 +299,8 @@ const forgotPassword = asyncHandler(async (req, res) => {
     throw new Error("Email not sent, please try again");
   }
 }
-);
-const resetPassword = asyncHandler(async (req, res) => {
+
+const resetPassword = async (req, res) => {
   const { password } = req.body;
   const { resetToken } = req.params;
 
@@ -329,7 +328,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   res.status(200).json({
     message: "Password Reset Successful, Please Login",
   });
-})
+}
 const getUsers = async (req, res) => {
   const users = await User.findAll()
   if(users){
