@@ -11,8 +11,8 @@ function LoginScreen() {
   const dispatch = useDispatch();
 
   const { isLoading, user, message} = useSelector(state => state.auth);
-  const [email, setEmail] = useState('omundifelix30@gmail.com');
-  const [password, setPassword] = useState('Fo123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
  
   useEffect(() => {
     if (user && user.email) {

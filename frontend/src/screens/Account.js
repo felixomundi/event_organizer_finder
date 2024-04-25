@@ -94,14 +94,14 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   saveButton: {
-    backgroundColor: 'blue',
+    backgroundColor: '#FFA500',
     borderRadius: 8,
     padding: 12,
     alignItems: 'center',
     marginBottom: 10,
   },
   logoutButton: {
-    backgroundColor: 'red',
+    backgroundColor: 'skyblue',
     borderRadius: 8,
     padding: 12,
     alignItems: 'center',

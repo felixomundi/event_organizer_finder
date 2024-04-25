@@ -48,12 +48,15 @@ const Orders = ({navigation}) => {
 
   return (
     <View style={styles.container}>    
-      <FlatList
-        data={orders}
-        renderItem={renderItem}
-        ItemSeparatorComponent={renderSeparator}
-        keyExtractor={item => item.id}
-      />
+      {orders.length === 0 ?
+      
+      (<Text>You have not created any orders</Text>) : <FlatList
+      data={orders}
+      renderItem={renderItem}
+      ItemSeparatorComponent={renderSeparator}
+      keyExtractor={item => item.id}
+    />}
+      
     </View>
   );
 };
@@ -86,7 +89,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   payNowButton: {
-    backgroundColor: 'blue',
+    backgroundColor: '#FFA500',
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 5,

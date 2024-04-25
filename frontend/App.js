@@ -14,7 +14,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import CartScreen from './src/screens/CartScreen';
 import Orders from './src/screens/Orders';
-import OD from "./src/screens/OD"
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import PaymentScreen from './src/screens/PaymentScreen';
 

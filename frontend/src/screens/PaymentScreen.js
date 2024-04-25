@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, ActivityIndicator, TouchableOpacity } from 'react-native';
 import Auth from '../components/Auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { getOrders, orderPayment, resetOrderStore } from '../redux/slices/orders';
@@ -61,7 +61,12 @@ const PaymentScreen = ({ route }) => {
           setPhoneNumber(numericText);
         }}
       />
-      <Button title="Pay Now" onPress={handlePayment} style={styles.payButton} />
+      {/* <Button title="Pay Now" onPress={handlePayment} style={styles.payButton} /> */}
+
+      <TouchableOpacity onPress={handlePayment} style={styles.payButton}>
+          <Text style={styles.payNowText}>Pay Now</Text>
+        </TouchableOpacity>
+
     </View>
   );
 };
@@ -96,13 +101,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   payButton: {
-    marginTop: 10,
-    width: '100%',
+    backgroundColor: '#FFA500',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 5,
   },
   loader: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  payNowText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

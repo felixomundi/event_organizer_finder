@@ -73,10 +73,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   add_to_cart_button: {
+    color:'#FFA500',
     marginTop: 30,
-    borderRadius:8
+    borderRadius: 8,
   },
- text: { fontSize: 25, fontWeight: "800", color: 'green'  },
+ text: { fontSize: 25, fontWeight: "800", color: '#FFA500'  },
 });
 
 

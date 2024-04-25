@@ -137,12 +137,12 @@ const styles = StyleSheet.create({
   },
   emptyCartText: {
     fontSize: 20,
-    color: 'red',
+    color: 'black',
     marginBottom: 10,
     textAlign: 'center',
   },
   browseEventsButton: {
-    backgroundColor: 'blue',
+    backgroundColor: '#FFA500',
     padding: 14,
     borderRadius: 5,
     alignItems: 'center',
