@@ -21,3 +21,5 @@ npm install
 eas login 
 eas whoami
 eas build -p android --profile preview
+
+npm uninstall -g expo-cli && npm install -g expo-cli@latest && yarn add expo@~50.0.17

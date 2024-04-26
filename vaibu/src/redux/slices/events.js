@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
-const URL = process.env.NETWORK_URL;
+const URL = process.env.NETWORK_URL || "https://c194-41-222-13-182.ngrok-free.app/";
 const API_URL = `${URL}events/`
 
 const config = {
