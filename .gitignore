@@ -3,4 +3,4 @@ yarn.lock
 .idea
 UML.md
 ngrok/
-
+.env*

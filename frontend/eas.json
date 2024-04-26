@@ -1,0 +1,32 @@
+{
+  "cli": {
+    "version": ">= 7.8.4"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "NETWORK_URL" : "http://192.168.43.136:5000/api/v1/",
+        "APP_URL": "http://192.168.43.136:5000/"
+      }
+    },
+    "preview": {
+      "ios":{
+        "simulator":true
+      },
+      "android":{
+        "buildType":"apk"
+      }
+    },
+    "production": {
+      "env": {
+        "NETWORK_URL" : "http://192.168.43.136:5000/api/v1/",
+        "APP_URL": "http://192.168.43.136:5000/"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

@@ -4,3 +4,20 @@
 - email : organizer@gmail.com password : Fo123456
 ## user login 
 - email : user@gmail.com password : Fo123456
+
+
+
+##### clear expo cache
+rm -rf node_modules
+npm cache clean --force
+npm install
+
+### uninstall global expo-cli
+- yarn global remove expo-cli
+- yarn global add expo-cli@latest
+- yarn add expo@~50.0.17
+
+## build apk
+eas login 
+eas whoami
+eas build -p android --profile preview
