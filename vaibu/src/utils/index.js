@@ -1,4 +1,4 @@
-const APP_URL = process.env.APP_URL || "https://c194-41-222-13-182.ngrok-free.app/";
+const APP_URL = process.env.APP_URL;
 function validateEmail(email) {    
     return email.match(
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/

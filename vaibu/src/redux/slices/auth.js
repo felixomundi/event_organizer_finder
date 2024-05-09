@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const URL = process.env.NETWORK_URL || "https://c194-41-222-13-182.ngrok-free.app/";
+const URL = process.env.NETWORK_URL;
 const API_URL = `${URL}users/` 
 
 const config = {
