@@ -23,3 +23,44 @@ eas whoami
 eas build -p android --profile preview
 
 npm uninstall -g expo-cli && npm install -g expo-cli@latest && yarn add expo@~50.0.17
+
+
+
+
+## MAIN APP FUNCTIONALITY
+
+
+Admin
+- login to the system
+- create event organizers
+- create event finders/discoverers
+- create admins/administrators
+- Manage Users/events/payments
+- Manage own profile
+
+
+Event Finders/Discoverers
+- Login to the system
+- register as event finders/discoverers
+- view/book book events
+- cancel event bookings
+- ticket payments
+- Manage profile
+
+Event Organizers Login
+- Book ticket for event finders/discoverers
+- accept/reject user event tickets
+- cancel/create/edit/delete/view events
+- accept/reject ticket payments
+- manage profile
+
+Available roles
+- admin
+- organizer
+- user 
+
+## Running the application
+
+npm run android
+C:\Users\NoPassword\AppData\Local\Android\Sdk/emulator/emulator @Medium_Phone_API_29
+C:\Users\NoPassword\AppData\Local\Android\Sdk/emulator/emulator -avd MediumPhoneAPI29

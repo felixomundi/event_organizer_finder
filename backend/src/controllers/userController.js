@@ -1,11 +1,10 @@
-// const db = require('../models');
 const jwt = require('jsonwebtoken');
 const {User} = require('./../database/models');
 const Token = {};
 const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
-const sendEmail = require("../utils/sendEmail");
 const dotenv = require('dotenv');
+const { mail } = require('../utils/email');
 dotenv.config();
 
 // Generate JWT Token
@@ -230,33 +229,40 @@ const changePassword = async (req, res) => {
  }
 };
 
-const forgotPassword = async (req, res) => {
-  const { email } = req.body;
-  const user = await User.findOne({ where:{
-    email:email,
-  } });
+
+// forgot password public
+const forgotPassword = async (req, res) => {  
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message:'Please provide email address'})
+    }
+  const user = await User.findOne({
+    where: {
+      email: email,
+    }
+  });
 
   if (!user) {
-    res.status(404);
-    throw new Error("User does not exist please signup!⚠️");
+    return res.status(400).json({
+      message: "User does not exist please signup!⚠️"
+    });
   }
 
   // Delete token if it exists in DB
   let token = await Token.findOne({
     where: {
       userId: user.id
-  } });
-  if (token) {
-    await token.destroy({
-      where: {
-        userId: user.id
-      }
-    });
-  }
+    }
+  });
+
+    if (token === null) { } else {      
+      await token.destroy();
+    }
+    
 
   // Create Reste Token
-  let resetToken = crypto.randomBytes(32).toString("hex") + user.id;
-  console.log(resetToken);
+  let resetToken =  crypto.randomBytes(32).toString("hex") + user.id; 
 
   // Hash token before saving to DB
   const hashedToken = crypto
@@ -265,44 +271,46 @@ const forgotPassword = async (req, res) => {
     .digest("hex");
 
   // Save Token to DB
-  await new Token({
+  await Token.create({
     userId: user.id,
     token: hashedToken,
     createdAt: Date.now(),
-    expiresAt: Date.now() + 30 * (60 * 1000), // Thirty minutes
-  }).save();
-
+    expiryDate: Date.now() + 30 * (60 * 1000), // 30 mins
+  });
 
   // Construct Reset Url
-   const resetUrl = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
-  //const resetUrl = `http:localhost:3000/resetpassword/${resetToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
   // Reset Email
   const message = `
       <h2>Hello ${user.name}</h2>
       <p>Please use the url below to reset your password</p>  
-      <p>This reset link is valid for only 30minutes.</p>
+      <p>This reset link is valid for only 30 minutes.</p>
 
       <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
 
-      <p>Regards...</p>
-      <p>Pinvent Team</p>
+      <p>Regards</p>
+      <p>${process.env.APP_NAME} Team</p>
     `;
-  const subject = "Password Reset Request";
-  const send_to = user.email;
-  const sent_from = process.env.EMAIL_USER;
-
-  try {
-    await sendEmail(subject, message, send_to, sent_from);
-    res.status(200).json({ success: true, message: "Check your email address to forget your password" });
-  } catch (error) {
-    res.status(500);
-    throw new Error("Email not sent, please try again");
+  const subject = "Password Reset Request"; 
+    // await sendEmail(subject, message, send_to, sent_from);
+   await mail(user.email, subject, message);
+    return res.status(200).json({ message: "Check your email address to forget your password" });
+  
+  } catch (error) {   
+    return res.status(400).json({
+      message:"Something went wrong, please try again" 
+    });
   }
-}
-
+};
+// reset password public
 const resetPassword = async (req, res) => {
-  const { password } = req.body;
-  const { resetToken } = req.params;
+  try {
+    const { password } = req.body;
+    if (!password) {
+      return res.status(400).json({message:'Please Provide Password'})
+    }
+    const { resetToken } = req.params;
 
   // Hash token, then compare to Token in DB
   const hashedToken = crypto
@@ -310,25 +318,46 @@ const resetPassword = async (req, res) => {
     .update(resetToken)
     .digest("hex");
 
-  // fIND tOKEN in DB
+  // Find token in DB
   const userToken = await Token.findOne({
     token: hashedToken,
-    expiresAt: { $gt: Date.now() },
+    expiryDate: {[Op.gt]: Date.now() },
   });
 
   if (!userToken) {
-    res.status(404);
-    throw new Error("Invalid or Expired Token");
+    return res.status(400).json({
+   message:"Invalid or Expired Token"  
+   })
+   
   }
 
   // Find user
-  const user = await User.findOne({ id: userToken.userId });
+    const user = await User.findOne({
+    where:{id:userToken.userId}
+  });
+  if (!user) {
+    return res.status(400).json({
+      message:"User not found"
+    })
+    
+  }
+  
+    // save user password
   user.password = password;
   await user.save();
-  res.status(200).json({
+
+  // Delete the token from the database after successful password reset
+  await userToken.destroy();
+  return res.status(200).json({
     message: "Password Reset Successful, Please Login",
   });
+  } catch (error) {
+    return res.status(400).json({
+     message:"Something went wrong in resetting password"
+   }) 
+  }
 }
+
 const getUsers = async (req, res) => {
   const users = await User.findAll()
   if(users){

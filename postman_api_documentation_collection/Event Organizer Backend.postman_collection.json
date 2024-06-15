@@ -367,8 +367,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5000/api/v1/users/login",
-							"protocol": "http",
+							"raw": "localhost:5000/api/v1/users/login",
 							"host": [
 								"localhost"
 							],
@@ -412,6 +411,118 @@
 								"v1",
 								"users",
 								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://8f66-41-222-13-182.ngrok-free.app/api/v1/users/",
+							"protocol": "https",
+							"host": [
+								"8f66-41-222-13-182",
+								"ngrok-free",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot-password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": " eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk0ODQ0OTY1LCJleHAiOjE2OTUwMTc3NjV9.f7W7a9TzVPc5-kE7M8rrNOXNAzGWi7JX89WuGpQJhNI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" :\"youremailaddress@gmail.com\"\r\n    \r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/v1/users/forgot-password",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset-password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": " eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk0ODQ0OTY1LCJleHAiOjE2OTUwMTc3NjV9.f7W7a9TzVPc5-kE7M8rrNOXNAzGWi7JX89WuGpQJhNI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n    \"password\": \"Fo123456\"\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/v1/users/resetpassword/d3974a5dad0bf81c056e69f9dffca2599f4d426472fff610eaa93260e9618b591",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"resetpassword",
+								"d3974a5dad0bf81c056e69f9dffca2599f4d426472fff610eaa93260e9618b591"
 							]
 						}
 					},
